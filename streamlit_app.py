@@ -4,10 +4,7 @@ import numpy as np
 
 st.title("Streamlit Playground")
 
-st.write("Example Dataframe")
+st.write("Example Widgets")
 
-dataframe = pd.DataFrame(
-    np.random.randn(10, 20),
-    columns=('col %d' % i for i in range(20)))
-
-st.table(dataframe.style.highlight_max(color='blue', axis=0))
+x = st.slider('x')  # 👈 this is a widget
+st.write(x, 'squared is', x * x)
