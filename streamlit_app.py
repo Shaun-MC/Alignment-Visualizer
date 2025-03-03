@@ -1,15 +1,16 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 
-st.title("2D Alignment Visualizer")
-st.write("Hello World")
+st.title("Streamlit Playground")
 
-st.write("Here's our first attempt at using data to create a table:")
-st.write(pd.DataFrame({
-    'first column': [1, 2, 3, 4],
-    'second column': [10, 20, 30, 40]
-}))
+dataframe = np.random.randn(10, 20)
 
+st.dataframe(dataframe)
+
+
+# Button Stuff
+""" 
 if 'button' not in st.session_state:
     st.session_state.button = False
 
@@ -24,3 +25,4 @@ if st.session_state.button:
     
 else:
     st.write('Button is off!')
+"""
