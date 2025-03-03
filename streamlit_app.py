@@ -5,8 +5,6 @@ import time
 
 st.title("Streamlit Playground")
 
-st.write("Example Widgets")
-
 if "counter" not in st.session_state:
     st.session_state.counter = 0
 
