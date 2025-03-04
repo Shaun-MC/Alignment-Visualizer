@@ -1,5 +1,74 @@
 import streamlit as st
 from io import StringIO
+from Bio import SeqIO
+
+# Look into Bio.AlingIO
+
+# Two lines
+def isFASTATwoStrings(S1: str, S2: str) -> bool:
+    """
+    Purpose
+    ----------
+    
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    
+    """
+    return True
+    
+def isFASTABatchInput(input: list) -> bool:
+    """
+    Purpose
+    ----------
+    
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    
+    """
+    return True
+# Bulk
+
+def isValidEncodingTwoStrings(sequence_type: str, S1: str, S2: str) -> bool:
+    """
+    Purpose
+    ----------
+    
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    
+    """
+    if sequence_type == "DNA":
+        return True
+            
+    elif sequence_type == "Protein":
+        return True
+
+def isValidEncodingBatchInput(sequence_type: str, input: list) -> bool:
+    """
+    Purpose
+    ----------
+    
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    
+    """
+    return True
 
 # Header
 st.markdown(
@@ -11,7 +80,7 @@ st.markdown(
 st.header("Input Settings")
 
 sequence_types, alignment_types = st.columns(2)
-is_using_scoring_matrix, placeholder = st.columns(2)
+using_scoring_matrix, format = st.columns(2)
 
 seq_type = al_type = None
 
@@ -23,12 +92,17 @@ with sequence_types:
 with alignment_types:
     alignment_type = st.radio("Alignment Types: ", ["Single", "Multiple"])
 
-with is_using_scoring_matrix:
+with using_scoring_matrix:
     scoring_matrix = st.radio("Using a Scoring Matrix?", ["Yes", "No"])
 
+with format:
+    input_format = st.radio("File Format: ", ["FASTA"])
+
+# Modualize into it's own file ???
 if alignment_type == "Single":
     
-    max_char_input = 20
+    # Narrow down later depending on how long it'll take
+    max_char_input = 100
     st.header(f"Input (Max {max_char_input} Characters)")
     
     max_height_pixels = 68
@@ -53,10 +127,15 @@ if alignment_type == "Single":
         
         # Display some kind of error message
         st.write("Placeholder")
+    
+    # Validation Passed
+    input_txt.append(S1)
+    input_txt.append(S2)
         
     # Test if the string is on multiple lines - if that matters
     # If the strings is DNA or Protein encoding
     
+# Modularize into multiple strings input - 2 strings would go into the 'single' alignment module
 else: 
 
     # Input Text Box - FASTA Only & Choose File
@@ -64,6 +143,7 @@ else:
     st.header("Input (FATSA)")
     uploaded_file = st.file_uploader("Upload a Text File") # When the file is updated - keep the file name & display the contents 
 
+    # Can probably use pandas to read in the data if its long
     def readFromFile():
 
         stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
