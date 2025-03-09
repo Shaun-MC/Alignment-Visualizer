@@ -1,0 +1,10 @@
+>Rosalind_10
+ATGGTC
+>Rosalind_11
+AGCAAT
+>Rosalind_12
+ATCGGT
+>Rosalind_13
+GATCGG
+>Rosalind_15
+ATCGGT

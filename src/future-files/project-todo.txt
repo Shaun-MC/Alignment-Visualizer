@@ -33,3 +33,5 @@ TODO: Refactor 'streamlit_app.py' into seperate modules / files
     - Input & Input Parsing
     - Alignment execution 
     - etc.
+
+TODO: Add a header and footer than aligns w/ the design of other Prof. Kim programs
