@@ -192,7 +192,7 @@ if alignment_type == "Single":
         S2 = st.text_area(label="S2: ", value="", height=max_height_pixels, max_chars=max_char_input)
     
     # WAIT UNTIL THE INPUT IS IN THE TEXT BOX IN BEGIN PARSING IT 
-    if not validateEncoding(sequence_type, [S1, S2]):
+    if not validateEncodings(sequence_type, [S1, S2]):
         
         st.write(f"[red]: Invalid Input Format, Doesn't Meet {sequence_type} Standards")
     
