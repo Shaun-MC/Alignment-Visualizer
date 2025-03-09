@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from io import StringIO
 from Bio import SeqIO
+import time
 
 # Look into Bio.AlingIO
 
@@ -119,12 +120,43 @@ def runSingleAlignment(input_txt: list) -> str:
             table_html += "<td></td>"
         table_html += "</tr>"
     table_html += "</tbody></table>"
-    
-    # Display the custom HTML table using Streamlit
-    st.markdown(table_html, unsafe_allow_html=True)
+
+    # Create a placeholder for the table
+    table_placeholder = st.empty()
+
+    # Initialize session state for visibility if it doesn't exist
+    if 'visible' not in st.session_state:
+        st.session_state.visible = True
+
+    for num in range(10):
+        # Toggle visibility
+        if st.session_state.visible:
+            table_placeholder.markdown(table_html, unsafe_allow_html=True)
+        else:
+            table_placeholder.empty()
+        
+        # st.session_state.visible = not st.session_state.visible
+        time.sleep(1)
+
+        #edit table
+        table_html = "<table><thead><tr><th></th>"
+        for col in range(len(x_axis)):
+            if (col == num):
+                table_html += f"<th>({x_axis[col]})</th>"
+            else:
+                table_html += f"<th>{x_axis[col]}</th>"
+        table_html += "</tr></thead><tbody>"
+        for row in range(len(y_axis)):
+            table_html += f"<tr><td>{y_axis[row]}</td>"
+            for col in x_axis:
+                table_html += "<td></td>"
+            table_html += "</tr>"
+        table_html += "</tbody></table>"
+
 
     # Placeholder for the actual alignment logic
     # For now, just join the input strings with a newline
+    #todo: display alignment
     return "\n".join(input_txt)
 
 # Header
