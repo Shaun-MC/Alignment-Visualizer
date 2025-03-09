@@ -70,6 +70,26 @@ def isValidEncodingBatchInput(sequence_type: str, input: list) -> bool:
     """
     return True
 
+def runAlignment(input_txt: list) -> str:
+    """
+    Purpose
+    ----------
+    Run the alignment on the provided list of strings.
+
+    Parameters
+    ----------
+    input_txt : list
+        List of strings to be aligned.
+
+    Returns
+    -------
+    str
+        Result of the alignment.
+    """
+    # Placeholder for the actual alignment logic
+    # For now, just join the input strings with a newline
+    return "\n".join(input_txt)
+
 # Header
 st.markdown(
     '<header style="text-align: center"> Sequence Alignment Visualizer </header>', 
@@ -135,6 +155,13 @@ if alignment_type == "Single":
     # Test if the string is on multiple lines - if that matters
     # If the strings is DNA or Protein encoding
     
+    # Add the "Run Alignment" button
+    if st.button("Run Alignment"):
+        # Placeholder for the alignment function
+        st.write("Running alignment...")
+        returnValue = runAlignment(input_txt)
+        st.write(returnValue)
+
 # Modularize into multiple strings input - 2 strings would go into the 'single' alignment module
 else: 
 
