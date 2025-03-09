@@ -150,7 +150,7 @@ with alignment_types:
     alignment_type = st.radio("Alignment Types: ", ["Single", "Multiple"])
 
 with using_scoring_matrix:
-    scoring_matrix = st.radio("Using a Scoring Matrix?", ["Yes", "No"])
+    scoring_matrix = st.radio("Using a Scoring Matrix?", ["No", "Yes"])
 
 with format:
     input_format = st.radio("File Format: ", ["FASTA"])
