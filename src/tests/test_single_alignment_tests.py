@@ -1,3 +1,5 @@
+# AppTest documentation: https://docs.streamlit.io/develop/api-reference/app-testing
+
 from streamlit.testing.v1 import AppTest
 
 """Single Alignment Tests"""
