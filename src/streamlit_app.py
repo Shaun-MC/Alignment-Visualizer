@@ -88,7 +88,7 @@ def validateEncodings(sequence_type: str, sequences: list) -> bool:
         ret &= validateEncoding(sequence_type, sequence)
     return ret
 
-def runAlignment(input_txt: list) -> str:
+def runSingleAlignment(input_txt: list) -> str:
     """
     Purpose
     ----------
@@ -197,25 +197,36 @@ if alignment_type == "Single":
     if st.button("Run Alignment"):
         # Placeholder for the alignment function
         st.write("Running alignment...")
-        returnValue = runAlignment(input_txt)
+        returnValue = runSingleAlignment(input_txt)
         st.write(returnValue)
 
 # Modularize into multiple strings input - 2 strings would go into the 'single' alignment module
 else: 
 
+    max_char_input = 100
+    max_height_pixels = 150
     # Input Text Box - FASTA Only & Choose File
     # Display the contents of this file
+    
     st.header("Input")
     uploaded_file = st.file_uploader("Upload a Text File") # When the file is updated - keep the file name & display the contents 
+    input = ""
+    file_input = ""
 
     # Can probably use pandas to read in the data if its long
     def readFromFile():
         stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
         return stringio.read()
-        
-    input_txt = st.text_area("Text Input", readFromFile()) if uploaded_file is not None else st.text_area("Text Input", "")
+    
+    if uploaded_file:
+        file_input = readFromFile()
+    
+    if len(file_input) > max_char_input:
+        st.write(f":red[File Input Longer Then Permitted. Allowed Length = {max_char_input}, File Length = {len(file_input)}]")
+        st.text_area(label="Text Input", value="", height=max_height_pixels, max_chars=max_char_input)
+    else:
+        input = st.text_area(label="Text Input", value=file_input, height=max_height_pixels, max_chars=max_char_input,) if uploaded_file is not None else st.text_area(label="Text Input", value="", height =max_height_pixels, max_chars=max_char_input)
 
-# Parse the Input for correct syntax, >Rosalind...`
 
 # Footer
 st.markdown(
