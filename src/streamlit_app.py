@@ -9,17 +9,19 @@ DNA_KEY = "DNA"
 RNA_KEY = "RNA"
 PROTEIN_KEY = "Protein"
 
-# ASCII values of A, C, G, T
+# Keys for each nucleotide letter representation
 @st.cache_data(persist="disk")
 def get_DNA_nucleotides_ascii():
-    return {65: None, 67: None, 71: None}
+    return {'A': None, 'C': None, 'G': None, 'T': None}
 
-# ASCII values for each of the amino acids: F, L, I, V, etc.,
+# Could have a single table or remove nucleotides from amino acid table 
+# Not a big difference, doesn't really matter
+
+# Keys for each amino acid letter representation
 @st.cache_data(persist="disk")
 def get_amino_acid_ascii():
-    return {82: None, 76: None, 73: None, 86: None, 77: None, 83: None, 80: None, 84: None, 65: None, 
-            89: None, 78: None, 68: None, 81: None, 75: None, 69: None, 67: None, 82: None, 71: None, 87: None}
-
+    return {'A': None, 'C': None, 'D': None, 'E': None, 'F': None, 'G': None, 'H': None, 'I': None, 'K': None, 
+            'L': None, 'M': None, 'P': None, 'Q': None, 'R': None, 'S': None, 'T': None, 'V': None, 'Y': None}
 
 def validateEncoding(sequence_type: str, sequence: str) -> bool:
     
@@ -42,7 +44,7 @@ def validateEncoding(sequence_type: str, sequence: str) -> bool:
     
     # https://docs.python.org/3.10/whatsnew/3.10.html#pep-634-structural-pattern-matching
     # Future, In the case statements, I want to use DNA_KEY variables instead of the string literal
-    # Might have to wrap the KEY's in a class, look more into the documentation, works for now
+    # Might have to wrap the KEY's in a class, look more into the documentation, works fine for now
     match sequence_type:
         
         case "DNA":
@@ -50,7 +52,7 @@ def validateEncoding(sequence_type: str, sequence: str) -> bool:
             DNA_nucleotides = get_DNA_nucleotides_ascii()
             
             for nucleotide in sequence:
-                if ord(nucleotide) not in DNA_nucleotides:
+                if nucleotide not in DNA_nucleotides:
                     return False
         
             return True
@@ -61,7 +63,7 @@ def validateEncoding(sequence_type: str, sequence: str) -> bool:
             
             for nucleotide in sequence:
             
-                if ord(nucleotide) not in DNA_nucleotides or nucleotide != 'U':
+                if nucleotide not in DNA_nucleotides or nucleotide != 'U':
                     return False
         
             return True
@@ -72,7 +74,7 @@ def validateEncoding(sequence_type: str, sequence: str) -> bool:
             
             for amino_acid in sequence:
                 
-                if ord(amino_acid) not in amino_acids:
+                if amino_acid not in amino_acids:
                     return False
             
         case _:
@@ -178,7 +180,7 @@ with format:
 if alignment_type == "Single":
     
     # Narrow down later depending on how long it'll take
-    max_char_input = 100
+    max_char_input = 20
     max_height_pixels = 68
     
     st.header(f"Input (Max {max_char_input} Characters)")
@@ -194,7 +196,7 @@ if alignment_type == "Single":
     # WAIT UNTIL THE INPUT IS IN THE TEXT BOX IN BEGIN PARSING IT 
     if not validateEncodings(sequence_type, [S1, S2]):
         
-        st.write(f"[red]: Invalid Input Format, Doesn't Meet {sequence_type} Standards")
+        st.write(f":red[Invalid Input Format, Doesn't Meet {sequence_type} Standards: ]")
     
     # Validation Passed
     input_txt.append(S1)
@@ -215,7 +217,7 @@ else:
 
     # Input Text Box - FASTA Only & Choose File
     # Display the contents of this file
-    st.header("Input (FATSA)")
+    st.header("Input")
     uploaded_file = st.file_uploader("Upload a Text File") # When the file is updated - keep the file name & display the contents 
 
     # Can probably use pandas to read in the data if its long
