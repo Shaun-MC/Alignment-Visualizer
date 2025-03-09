@@ -1,0 +1,19 @@
+Setting Up Your IDE
+Open the Project in VSCode: Open the project folder in Visual Studio Code.
+
+Reopen in Container: If you have the Remote - Containers extension installed, 
+VSCode should prompt you to reopen the folder in a container. If not, you can 
+manually do this by clicking on the green bottom-left corner and selecting 
+"Reopen in Container".
+
+Install Extensions: The specified extensions (ms-python.python and 
+ms-python.vscode-pylance) will be automatically installed in the container.
+
+Run the Update Command: The updateContentCommand will run automatically to 
+install any necessary packages and dependencies.
+
+Start the Streamlit Server: The postAttachCommand will start the Streamlit 
+server, and you can access it at http://localhost:8501.
+
+By following these steps, your IDE will be set up with a consistent development
+ environment, ensuring that all dependencies and configurations 

@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from io import StringIO
 from Bio import SeqIO
 
@@ -105,6 +106,46 @@ def validateEncodings(sequence_type: str, sequences: list) -> bool:
     
     return ret
 
+def runAlignment(input_txt: list) -> str:
+    """
+    Purpose
+    ----------
+    Run the alignment on the provided list of strings.
+
+    Parameters
+    ----------
+    input_txt : list
+        List of strings to be aligned.
+
+    Returns
+    -------
+    str
+        Result of the alignment.
+    """
+
+    # Create a DataFrame with input_txt[0] on the y-axis and input_txt[1] on the x-axis
+    y_axis = list(input_txt[0])
+    x_axis = list(input_txt[1])
+    
+     # Create a custom HTML table with non-unique column and row names
+    table_html = "<table><thead><tr><th></th>"
+    for col in x_axis:
+        table_html += f"<th>{col}</th>"
+    table_html += "</tr></thead><tbody>"
+    for row in y_axis:
+        table_html += f"<tr><td>{row}</td>"
+        for col in x_axis:
+            table_html += "<td></td>"
+        table_html += "</tr>"
+    table_html += "</tbody></table>"
+    
+    # Display the custom HTML table using Streamlit
+    st.markdown(table_html, unsafe_allow_html=True)
+
+    # Placeholder for the actual alignment logic
+    # For now, just join the input strings with a newline
+    return "\n".join(input_txt)
+
 # Header
 st.markdown(
     '<header style="text-align: center"> Sequence Alignment Visualizer </header>', 
@@ -162,6 +203,13 @@ if alignment_type == "Single":
     # Test if the string is on multiple lines - if that matters
     # If the strings is DNA or Protein encoding
     
+    # Add the "Run Alignment" button
+    if st.button("Run Alignment"):
+        # Placeholder for the alignment function
+        st.write("Running alignment...")
+        returnValue = runAlignment(input_txt)
+        st.write(returnValue)
+
 # Modularize into multiple strings input - 2 strings would go into the 'single' alignment module
 else: 
 
