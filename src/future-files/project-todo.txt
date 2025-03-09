@@ -1,0 +1,28 @@
+Bug Report
+
+"TypeError: unsupported operand type(s) for &=: 'bool' and 'NoneType'"
+
+ Conditions to cause
+    Single Alignment Type Button
+    When a string is input, and a button setting is updated 
+    When both strings are input, but one is removed
+  
+  Potential Fix: 
+    Make sure there's two strings in S1, S2 before executing validation
+
+Todo List
+
+TODO: Add a character and string limit to Multiple Alignment text input
+    - Verify from file input as well
+
+TODO: Be able to visualize the text for multiple alignment type file input
+    - List each key (if present) and string in the file 
+
+TODO: Add Input Testing
+    
+TODO: Refactor 'streamlit_app.py' into seperate modules / files
+    - i.e.:
+    - Input Settings 
+    - Input & Input Parsing
+    - Alignment execution 
+    - etc.
