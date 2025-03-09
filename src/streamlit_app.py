@@ -4,71 +4,106 @@ from Bio import SeqIO
 
 # Look into Bio.AlingIO
 
-# Two lines
-def isFASTATwoStrings(S1: str, S2: str) -> bool:
-    """
-    Purpose
-    ----------
+DNA_KEY = "DNA"
+RNA_KEY = "RNA"
+PROTEIN_KEY = "Protein"
+
+# ASCII values of A, C, G, T
+@st.cache_data(persist="disk")
+def get_DNA_nucleotides_ascii():
+    return {65: None, 67: None, 71: None}
+
+# ASCII values for each of the amino acids: F, L, I, V, etc.,
+@st.cache_data(persist="disk")
+def get_amino_acid_ascii():
+    return {82: None, 76: None, 73: None, 86: None, 77: None, 83: None, 80: None, 84: None, 65: None, 
+            89: None, 78: None, 68: None, 81: None, 75: None, 69: None, 67: None, 82: None, 71: None, 87: None}
+
+
+def validateEncoding(sequence_type: str, sequence: str) -> bool:
     
+    """
+    Iterates through a sequence to determine if it's valid against the sequence type
 
     Parameters
     ----------
+    sequence_type : str
+        type of sequence that's currently supported (DNA, RNA, Protein)
+    
+    sequence : list
+        the sequence that need to be verified against the sequence type
 
     Returns
     -------
-    
+    bool
+        True if all characters in the sequence match the sequence type
     """
-    return True
     
-def isFASTABatchInput(input: list) -> bool:
-    """
-    Purpose
-    ----------
-    
-
-    Parameters
-    ----------
-
-    Returns
-    -------
-    
-    """
-    return True
-# Bulk
-
-def isValidEncodingTwoStrings(sequence_type: str, S1: str, S2: str) -> bool:
-    """
-    Purpose
-    ----------
-    
-
-    Parameters
-    ----------
-
-    Returns
-    -------
-    
-    """
-    if sequence_type == "DNA":
-        return True
+    # https://docs.python.org/3.10/whatsnew/3.10.html#pep-634-structural-pattern-matching
+    # Future, In the case statements, I want to use DNA_KEY variables instead of the string literal
+    # Might have to wrap the KEY's in a class, look more into the documentation, works for now
+    match sequence_type:
+        
+        case "DNA":
             
-    elif sequence_type == "Protein":
-        return True
+            DNA_nucleotides = get_DNA_nucleotides_ascii()
+            
+            for nucleotide in sequence:
+                if ord(nucleotide) not in DNA_nucleotides:
+                    return False
+        
+            return True
 
-def isValidEncodingBatchInput(sequence_type: str, input: list) -> bool:
+        case "RNA":
+            
+            DNA_nucleotides = get_DNA_nucleotides_ascii()
+            
+            for nucleotide in sequence:
+            
+                if ord(nucleotide) not in DNA_nucleotides or nucleotide != 'U':
+                    return False
+        
+            return True
+
+        case "Protein":
+            
+            amino_acids = get_amino_acid_ascii()
+            
+            for amino_acid in sequence:
+                
+                if ord(amino_acid) not in amino_acids:
+                    return False
+            
+        case _:
+            # ERROR CASE - ADD TO A LOG
+            return True
+
+def validateEncodings(sequence_type: str, sequences: list) -> bool:
     """
-    Purpose
-    ----------
-    
+    Checks if all the passed in sequences are valid against the passed in sequence type
+        Interface for the validateEncoding() function
 
     Parameters
     ----------
+    sequence_type : str
+        type of sequence that's currently supported (DNA, RNA, Protein)
+    
+    sequences : list
+        the sequences that need to be verified against the sequence type
 
     Returns
     -------
-    
+    bool
+        True if all sequences are valid against the sequence_type
+
     """
-    return True
+    ret = True
+
+    for sequence in sequences:
+        
+        ret &= validateEncoding(sequence_type, sequence)
+    
+    return ret
 
 # Header
 st.markdown(
@@ -87,7 +122,7 @@ seq_type = al_type = None
 input_txt = []
 
 with sequence_types:
-    sequence_type = st.radio("Sequence Type: ", ["DNA", "Protein"])
+    sequence_type = st.radio("Sequence Type: ", ["DNA", "RNA", "Protein"])
     
 with alignment_types:
     alignment_type = st.radio("Alignment Types: ", ["Single", "Multiple"])
@@ -98,14 +133,14 @@ with using_scoring_matrix:
 with format:
     input_format = st.radio("File Format: ", ["FASTA"])
 
-# Modualize into it's own file ???
+# Modualize the single vs mutliple into it's own files ??? - future
 if alignment_type == "Single":
     
     # Narrow down later depending on how long it'll take
     max_char_input = 100
-    st.header(f"Input (Max {max_char_input} Characters)")
-    
     max_height_pixels = 68
+    
+    st.header(f"Input (Max {max_char_input} Characters)")
     
     s1_input, s2_input = st.columns(2)
     
@@ -115,18 +150,10 @@ if alignment_type == "Single":
     with s2_input:
         S2 = st.text_area(label="S2: ", value="", height=max_height_pixels, max_chars=max_char_input)
     
-    def validateEncoding(sequence_type, S1, S2):
+    # WAIT UNTIL THE INPUT IS IN THE TEXT BOX IN BEGIN PARSING IT 
+    if not validateEncoding(sequence_type, [S1, S2]):
         
-        if sequence_type == "DNA":
-            return True
-            
-        elif sequence_type == "Protein":
-            return True
-            
-    if not validateEncoding(sequence_type, S1, S2):
-        
-        # Display some kind of error message
-        st.write("Placeholder")
+        st.write(f"[red]: Invalid Input Format, Doesn't Meet {sequence_type} Standards")
     
     # Validation Passed
     input_txt.append(S1)
