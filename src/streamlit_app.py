@@ -24,7 +24,6 @@ def get_amino_acid_ascii():
             'L': None, 'M': None, 'P': None, 'Q': None, 'R': None, 'S': None, 'T': None, 'V': None, 'Y': None}
 
 def validateEncoding(sequence_type: str, sequence: str) -> bool:
-    
     """
     Iterates through a sequence to determine if it's valid against the sequence type
 
@@ -41,42 +40,27 @@ def validateEncoding(sequence_type: str, sequence: str) -> bool:
     bool
         True if all characters in the sequence match the sequence type
     """
-    
-    # https://docs.python.org/3.10/whatsnew/3.10.html#pep-634-structural-pattern-matching
-    # Future, In the case statements, I want to use DNA_KEY variables instead of the string literal
-    # Might have to wrap the KEY's in a class, look more into the documentation, works fine for now
     match sequence_type:
-        
         case "DNA":
-            
             DNA_nucleotides = get_DNA_nucleotides_ascii()
-            
             for nucleotide in sequence:
                 if nucleotide not in DNA_nucleotides:
                     return False
-        
             return True
-
         case "RNA":
-            
             DNA_nucleotides = get_DNA_nucleotides_ascii()
-            
             for nucleotide in sequence:
             
                 if nucleotide not in DNA_nucleotides or nucleotide != 'U':
                     return False
-        
             return True
-
         case "Protein":
-            
             amino_acids = get_amino_acid_ascii()
-            
             for amino_acid in sequence:
                 
                 if amino_acid not in amino_acids:
                     return False
-            
+            return True
         case _:
             # ERROR CASE - ADD TO A LOG
             return True
@@ -98,14 +82,10 @@ def validateEncodings(sequence_type: str, sequences: list) -> bool:
     -------
     bool
         True if all sequences are valid against the sequence_type
-
     """
     ret = True
-
     for sequence in sequences:
-        
         ret &= validateEncoding(sequence_type, sequence)
-    
     return ret
 
 def runAlignment(input_txt: list) -> str:
@@ -124,12 +104,11 @@ def runAlignment(input_txt: list) -> str:
     str
         Result of the alignment.
     """
-
     # Create a DataFrame with input_txt[0] on the y-axis and input_txt[1] on the x-axis
     y_axis = list(input_txt[0])
     x_axis = list(input_txt[1])
     
-     # Create a custom HTML table with non-unique column and row names
+    # Create a custom HTML table with non-unique column and row names
     table_html = "<table><thead><tr><th></th>"
     for col in x_axis:
         table_html += f"<th>{col}</th>"
@@ -176,7 +155,16 @@ with using_scoring_matrix:
 with format:
     input_format = st.radio("File Format: ", ["FASTA"])
 
-# Modualize the single vs mutliple into it's own files ??? - future
+# Display a 5x5 table for scoring matrix input if "Yes" is selected
+if scoring_matrix == "Yes":
+    st.header("Custom Scoring Matrix")
+    labels = ["_", "A", "G", "C", "T"]
+    data = {label: [0] * 5 for label in labels}
+    df = pd.DataFrame(data, index=labels)
+    edited_df = st.data_editor(df, use_container_width=True)
+    #st.write("Scoring Matrix:", edited_df)
+
+# Modualize the single vs multiple into its own files ??? - future
 if alignment_type == "Single":
     
     # Narrow down later depending on how long it'll take
@@ -222,7 +210,6 @@ else:
 
     # Can probably use pandas to read in the data if its long
     def readFromFile():
-
         stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
         return stringio.read()
         
