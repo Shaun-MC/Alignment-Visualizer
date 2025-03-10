@@ -1,14 +1,6 @@
 Bug Report
 
-"TypeError: unsupported operand type(s) for &=: 'bool' and 'NoneType'"
-
- Conditions to cause
-    Single Alignment Type Button
-    When a string is input, and a button setting is updated 
-    When both strings are input, but one is removed
-  
-  Potential Fix: 
-    Make sure there's two strings in S1, S2 before executing validation
+None at this time
 
 Todo List
 
