@@ -128,10 +128,17 @@ def runSingleAlignment(input_txt: list) -> str:
     if 'visible' not in st.session_state:
         st.session_state.visible = True
 
-    desiredRow = 0
-    desiredColumn = 0
     curRow = 0
     curColumn = 0
+
+    #calculate matrix letter matrix
+    matrix = []
+    for i in range(len(y_axis)):
+        row = []
+        for j in range(len(x_axis)):
+            row.append(y_axis[i] + x_axis[j])
+        matrix.append(row)
+
 
     for num in range(len(y_axis) * len(x_axis) + 1):
         # Toggle visibility
@@ -165,8 +172,7 @@ def runSingleAlignment(input_txt: list) -> str:
             for col in range(len(x_axis)):
                 # If this cell should be filled (we've reached it in our iteration)
                 if row < curRow or (row == curRow and col <= curCol):
-                    random_value = 2  # 
-                    table_html += f"<td>{random_value}</td>"
+                    table_html += f"<td>{matrix[row][col]}</td>"
                 else:
                     table_html += "<td></td>"
             table_html += "</tr>"
