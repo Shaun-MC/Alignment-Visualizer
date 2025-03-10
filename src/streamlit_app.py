@@ -51,8 +51,7 @@ def validateEncoding(sequence_type: str, sequence: str) -> bool:
         case "RNA":
             DNA_nucleotides = get_DNA_nucleotides_ascii()
             for nucleotide in sequence:
-            
-                if nucleotide not in DNA_nucleotides or nucleotide != 'U':
+                if nucleotide not in DNA_nucleotides and nucleotide != 'U':
                     return False
             return True
         case "Protein":
@@ -159,6 +158,9 @@ def runSingleAlignment(input_txt: list) -> str:
     #todo: display alignment
     return "\n".join(input_txt)
 
+def runMultipleAlignment(input_txt) -> str:
+    return ""
+
 # Header
 st.markdown(
     '<header style="text-align: center"> Sequence Alignment Visualizer </header>', 
@@ -185,7 +187,7 @@ with using_scoring_matrix:
     scoring_matrix = st.radio("Using a Scoring Matrix?", ["No", "Yes"])
 
 with format:
-    input_format = st.radio("File Format: ", ["FASTA"])
+    input_format = st.radio("File Format: ", ["FASTA", "Plain Text"])
 
 # Display a 5x5 table for scoring matrix input if "Yes" is selected
 if scoring_matrix == "Yes":
@@ -218,19 +220,19 @@ if alignment_type == "Single":
         
         st.write(f":red[Invalid Input Format, Doesn't Meet {sequence_type} Standards: ]")
     
-    # Validation Passed
-    input_txt.append(S1)
-    input_txt.append(S2)
+    else: # Validation Passed
+
+        input_txt.append(S1)
+        input_txt.append(S2)
         
-    # Test if the string is on multiple lines - if that matters
-    # If the strings is DNA or Protein encoding
-    
-    # Add the "Run Alignment" button
-    if st.button("Run Alignment"):
-        # Placeholder for the alignment function
-        st.write("Running alignment...")
-        returnValue = runSingleAlignment(input_txt)
-        st.write(returnValue)
+        # Test if the string is on multiple lines - if that matters
+
+        # Add the "Run Alignment" button
+        if input_txt[0] and input_txt[1] and st.button("Run Alignment"):
+            # Placeholder for the alignment function
+            st.write("Running alignment...")
+            returnValue = runSingleAlignment(input_txt)
+            st.write(returnValue)
 
 # Modularize into multiple strings input - 2 strings would go into the 'single' alignment module
 else: 
@@ -242,23 +244,68 @@ else:
     
     st.header("Input")
     uploaded_file = st.file_uploader("Upload a Text File") # When the file is updated - keep the file name & display the contents 
-    input = ""
-    file_input = ""
+    sequences = file_input = ""
 
     # Can probably use pandas to read in the data if its long
     def readFromFile():
         stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
         return stringio.read()
     
+    # Read from File
     if uploaded_file:
         file_input = readFromFile()
     
-    if len(file_input) > max_char_input:
-        st.write(f":red[File Input Longer Then Permitted. Allowed Length = {max_char_input}, File Length = {len(file_input)}]")
-        st.text_area(label="Text Input", value="", height=max_height_pixels, max_chars=max_char_input)
+        if len(file_input) > max_char_input:
+            st.write(f":red[File Input Longer Then Permitted. Allowed Length = {max_char_input}, File Length = {len(file_input)}]")
+            st.text_area(label="Text Input", value="", height=max_height_pixels, max_chars=max_char_input)
+    
+    # If a file is uploaded, display it's contents in the text box
+    # Else, read in input from the text_area
     else:
-        input = st.text_area(label="Text Input", value=file_input, height=max_height_pixels, max_chars=max_char_input,) if uploaded_file is not None else st.text_area(label="Text Input", value="", height =max_height_pixels, max_chars=max_char_input)
+        sequences = st.text_area(label="Text Input", value=file_input, height=max_height_pixels, max_chars=max_char_input,) if uploaded_file is not None else st.text_area(label="Text Input", value="", height =max_height_pixels, max_chars=max_char_input)
+    
+    if sequences:
+        
+        def cleanSequences(format, sequences) -> list[str]:
+            
+            # Each line in the text_area is split by an ascii '10' characters, Char = LF, NL Line Feed, new line
+            match format:
+                
+                # Works as intended
+                case "Plain Text":
+                    return sequences.splitlines()
+                
+                case "FASTA":
+                    
+                    ret = []
+                    sequences = sequences.splitlines()
+                    
+                    for line in sequences:
 
+                        if line[0] != ">":
+                            ret.append(line)
+                    
+                    return ret
+                
+                case _:
+                    # ERROR CONDITION
+                    return None
+        
+        # NOTE: For FASTA files, validate that it's actually a FASTA file before extracting all the sequences
+        # NOTE: Also validate for Plain Text Files: check if any character isn't A-Z
+        
+        sequences = cleanSequences(input_format, sequences)
+    
+        if not validateEncodings(sequence_type, sequences):
+            st.write(f":red[Invalid Input Format, Doesn't Meet {sequence_type} Standards: ]")
+        
+        else:
+        
+            if st.button("Run Alignment"):
+                # Placeholder for the alignment function
+                st.write("Running alignment...")
+                returnValue = runMultipleAlignment(input)
+                st.write(returnValue)
 
 # Footer
 st.markdown(
