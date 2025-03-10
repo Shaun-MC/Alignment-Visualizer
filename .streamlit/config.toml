@@ -5,7 +5,7 @@ level = "info"
 messageFormat = "%(asctime)s %(message)s"
 
 [client]
-showErrorDetails = "stacktrace"
+showErrorDetails = "full"
 
 [runner]
 magicEnabled = false
