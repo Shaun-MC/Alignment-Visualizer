@@ -316,11 +316,55 @@ else:
                     # ERROR CONDITION
                     return None
         
-        # NOTE: For FASTA files, validate that it's actually a FASTA file before extracting all the sequences
-        # NOTE: Also validate for Plain Text Files: check if any character isn't A-Z
+        # TODO: Write function
+        def validateFileFormat(format, sequences) -> bool:
+
+            match format:
+                
+                case "Plain Text":
+                    sequences = sequences.splitlines()
+                    
+                    for line in sequences:
+                        for char in line:
+                            if type(char) != str:
+                                return False
+                            
+                            char_ascii = ord(char)
+                            
+                            if char_ascii < 65 or char_ascii > 90:
+                                return False
+                                       
+                    return True
+
+                case "FASTA":
+                    
+                    sequences = sequences.splitlines()
+                    keys = set()
+                    line_counter = 0
+                    
+                    # Every other line starts w/ an '>' and each key is unique
+                    for line in sequences:
+                        # Key line
+                        if line_counter % 2 == 0:
+                            
+                            if line[0] != '>' or line in keys:
+                                return False
+
+                            else:
+                                keys.add(line)
+                            
+                    return True
+                        
+                case _:
+                    # ERROR CONDITION
+                    return False
+            
+        if not validateFileFormat(input_format, sequences):
+            st.write(f":red[Invalid Input Format, Doesn't Meet {input_format} Standards]")
         
         sequences = cleanSequences(input_format, sequences)
-    
+
+        # Add the proper characters given the sequence type
         if not validateEncodings(sequence_type, sequences):
             st.write(f":red[Invalid Input Format, Doesn't Meet {sequence_type} Standards: ]")
         

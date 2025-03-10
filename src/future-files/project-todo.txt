@@ -1,15 +1,16 @@
 Bug Report
 
-None at this time
+Uploading a file w/ during Multiple Alignment Path removes the input text box
+ - Doesn't matter whether the file passes validation
 
 Todo List
 
 TODO: SCORING MATRIX
-    - Row titles can be edited
+    - Row titles shouldn't be able to be edited
     - Titles aren't updated for the sequence types, always DNA
     - Initialize bottom triangle to none or have 0 values and unable to edit them
 
-TODO: Add a character and string limit to Multiple Alignment text input
+TODO: Add a character and string limit to Multiple Alignment text input - DONE
     - Verify from file input as well
 
 TODO: Be able to visualize the text for multiple alignment type file input
@@ -18,6 +19,7 @@ TODO: Be able to visualize the text for multiple alignment type file input
 TODO: Add Input Testing
     - Use pytest
     - Write test cases in test_multiple_alignment_tests.py & test_single_alignment_tests.py
+    - Until sequencing algorithm is implemented, can only test negative path cases, searching for bugs/errors
     
 TODO: Refactor 'streamlit_app.py' into seperate modules / files
     - i.e.:
