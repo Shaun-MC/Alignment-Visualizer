@@ -106,8 +106,8 @@ def runSingleAlignment(input_txt: list) -> str:
         Result of the alignment.
     """
     # Create a DataFrame with input_txt[0] on the y-axis and input_txt[1] on the x-axis
-    y_axis = list(input_txt[0])
-    x_axis = list(input_txt[1])
+    y_axis = ["_"] + list(input_txt[0])
+    x_axis = ["_"] + list(input_txt[1])
     
     # Create a custom HTML table with non-unique column and row names
     table_html = "<table><thead><tr><th></th>"
@@ -139,7 +139,7 @@ def runSingleAlignment(input_txt: list) -> str:
             row.append(y_axis[i] + x_axis[j])
         matrix.append(row)
 
-
+    #iterate through the table scoring
     for num in range(len(y_axis) * len(x_axis) + 1):
         # Toggle visibility
         if st.session_state.visible:
