@@ -112,10 +112,10 @@ def runSingleAlignment(input_txt: list) -> str:
     # Create a custom HTML table with non-unique column and row names
     table_html = "<table><thead><tr><th></th>"
     for col in x_axis:
-        table_html += f"<th>{col}</th>"
+        table_html += f"<th> {col} </th>"
     table_html += "</tr></thead><tbody>"
     for row in y_axis:
-        table_html += f"<tr><td>{row}</td>"
+        table_html += f"<tr><td> {row} </td>"
         for col in x_axis:
             table_html += "<td></td>"
         table_html += "</tr>"
@@ -128,7 +128,12 @@ def runSingleAlignment(input_txt: list) -> str:
     if 'visible' not in st.session_state:
         st.session_state.visible = True
 
-    for num in range(10):
+    desiredRow = 0
+    desiredColumn = 0
+    curRow = 0
+    curColumn = 0
+
+    for num in range(len(y_axis) * len(x_axis) + 1):
         # Toggle visibility
         if st.session_state.visible:
             table_placeholder.markdown(table_html, unsafe_allow_html=True)
@@ -138,18 +143,32 @@ def runSingleAlignment(input_txt: list) -> str:
         # st.session_state.visible = not st.session_state.visible
         time.sleep(1)
 
-        #edit table
+        # Calculate current row and column positions
+        curRow = num // len(x_axis)
+        curCol = num % len(x_axis)
+        
+        # edit table
         table_html = "<table><thead><tr><th></th>"
         for col in range(len(x_axis)):
-            if (col == num):
+            if (col == curCol):
                 table_html += f"<th>({x_axis[col]})</th>"
             else:
-                table_html += f"<th>{x_axis[col]}</th>"
+                table_html += f"<th> {x_axis[col]} </th>"
         table_html += "</tr></thead><tbody>"
+        
+        # Fill the table cells
         for row in range(len(y_axis)):
-            table_html += f"<tr><td>{y_axis[row]}</td>"
-            for col in x_axis:
-                table_html += "<td></td>"
+            if (row == curRow):
+                table_html += f"<tr><td>({y_axis[row]})</td>"
+            else:
+                table_html += f"<tr><td> {y_axis[row]} </td>"
+            for col in range(len(x_axis)):
+                # If this cell should be filled (we've reached it in our iteration)
+                if row < curRow or (row == curRow and col <= curCol):
+                    random_value = 2  # 
+                    table_html += f"<td>{random_value}</td>"
+                else:
+                    table_html += "<td></td>"
             table_html += "</tr>"
         table_html += "</tbody></table>"
 
