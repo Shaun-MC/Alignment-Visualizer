@@ -10,15 +10,13 @@ class MultipleAlignment:
 
         self.unparsed_sequences = None
 
-        self._handle_input()
-
-    def set_unparsed_sequences(self, sequences):
+    def _set_unparsed_sequences(self, sequences):
         self.unparsed_sequences = sequences
         
     def get_unparsed_sequences(self) -> list:
         return self.unparsed_sequences
 
-    def _handle_input(self) -> None:
+    def handle_input(self) -> None:
 
         st.header(self.input_header)
 
@@ -48,4 +46,4 @@ class MultipleAlignment:
                 
         # We don't need to parse or validate the sequence input here as it's handled in a different class
         # This function only has retrieve it from the user - Include in doc in the beginning of the function
-        self.set_sequences(retrieve_sequences_input())
+        self._set_sequences(retrieve_sequences_input())
