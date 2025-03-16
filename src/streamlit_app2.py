@@ -10,7 +10,6 @@ if __name__ == "__main__":
     )
     
     program = Alignment()
-
     program.execute()
 
     # Page Footer
