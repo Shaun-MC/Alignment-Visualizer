@@ -276,7 +276,7 @@ if scoring_matrix == "Yes":
     labels = ["_", "A", "G", "C", "T"]
     data = {label: [0] * 5 for label in labels}
     df = pd.DataFrame(data, index=labels)
-    edited_df = st.data_editor(df, use_container_width=True)
+    st.data_editor(df, use_container_width=True)
     #st.write("Scoring Matrix:", edited_df)
 
 # Modualize the single vs multiple into its own files ??? - future
