@@ -1,8 +1,8 @@
 from options import Options
-from alignment_type_factory import AlignmentTypeFactory
 from scoring_matrix_factory import ScoringMatrixFactory
-#from input_format_factory import InputFormatFactory
+from alignment_type_factory import AlignmentTypeFactory
 from sequence_type_factory import SequenceTypeFactory
+from input_format_factory import InputFormatFactory
 import streamlit as st
 
 class Alignment:
@@ -54,7 +54,7 @@ class Alignment:
                 return
 
             except Exception as e:
-                # Do something else
+                # If anything else happens - check for exceptions
                 st.error(e)
                 return
 

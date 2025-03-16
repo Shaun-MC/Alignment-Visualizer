@@ -1,3 +1,7 @@
+from dna_sequence_type import DNA
+from rna_sequence_type import RNA
+from protein_sequence_type import Protein
+
 class SequenceTypeFactory:
     @staticmethod
     def create_sequence_type(sequence_type_option):
