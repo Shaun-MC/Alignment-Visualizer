@@ -38,6 +38,8 @@ class Options:
     # Actions
     def _execute(self):
 
+        st.header("Input Settings")
+        
         # Declare all the options variables
         sequence_types, alignment_types = st.columns(2)
         using_scoring_matrix, file_formats = st.columns(2)
