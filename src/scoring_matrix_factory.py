@@ -3,6 +3,7 @@ from rna_scoring_matrix import RNAScoringMatrix
 from protein_scoring_matrix import ProteinScoringMatrix
 from default_dna_scoring_matrix import DefaultDNAScoringMatrix
 from default_rna_scoring_matrix import DefaultRNAScoringMatrix
+from default_protein_scoring_matrix import DefaultProteinScoringMatrix
 
 class ScoringMatrixFactory:
     @staticmethod
@@ -14,11 +15,9 @@ class ScoringMatrixFactory:
                 case "DNA":
                     return DefaultDNAScoringMatrix()
                 case "RNA":
-                    # todo: make defautl rna matrix
                     return DefaultRNAScoringMatrix()
                 case "Protein":
-                    # todo: make defautl protein matrix
-                    return ProteinScoringMatrix()
+                    return DefaultProteinScoringMatrix()
                 case _:
                     raise ValueError("Invalid sequence type option")
         
