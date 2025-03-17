@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 
 class RNAScoringMatrix:
 
@@ -10,7 +11,14 @@ class RNAScoringMatrix:
         # Initialize the matrix
         st.header("Custom Scoring Matrix")
         labels = ["_", "A", "G", "C", "U"]
-        data = {label: [0] * self.total_characters for label in labels}
+
+        data = {
+            "_": [0, np.nan, np.nan, np.nan, np.nan],
+            "A": [0, 0, np.nan, np.nan, np.nan],
+            "G": [0, 0, 0, np.nan, np.nan],
+            "C": [0, 0, 0, 0, np.nan],
+            "U": [0, 0, 0, 0, 0]
+        }
 
         # Display the matrix
-        st.data_editor(pd.DataFrame(data, index=labels), use_container_width=True)
+        self.scoring_matrix = st.data_editor(pd.DataFrame(data, index=labels), use_container_width=True)
