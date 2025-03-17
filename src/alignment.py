@@ -76,6 +76,6 @@ class Alignment:
             # Start executing alginemnt 
             if st.button("Run Alignment"):
                 st.write("Running Alignment...")
-                st.write(self.alignment_type.execute_alignment(sequence_input, self.scoring_matrix))
+                st.write(self.alignment_type.execute_alignment(sequence_input, self.scoring_matrix.scoring_matrix))
             
         execute_alignment(sequence_input)
