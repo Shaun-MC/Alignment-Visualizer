@@ -7,6 +7,7 @@ class Options:
         self.using_scoring_matrix = None
         self.input_format = None
         self.sequence_type = None
+        self.alignment_location = None
 
         self._execute()
 
@@ -23,6 +24,9 @@ class Options:
     def set_sequence_type(self, sequence_type):
         self.sequence_type = sequence_type
 
+    def set_alignment_location(self, alignment_location):
+        self.alignment_location = alignment_location
+
     def get_alignment_type(self):
         return self.alignment_type
 
@@ -35,6 +39,9 @@ class Options:
     def get_sequence_type(self):
         return self.sequence_type
 
+    def get_alignment_location(self):
+        return self.alignment_location
+
     # Actions
     def _execute(self):
 
@@ -43,6 +50,7 @@ class Options:
         # Declare all the options variables
         sequence_types, alignment_types = st.columns(2)
         using_scoring_matrix, file_formats = st.columns(2)
+        alignment_location, blank = st.columns(2)
 
         # Display the option buttons
         # First options in the list is the default
@@ -57,3 +65,6 @@ class Options:
 
         with file_formats:
             self.set_input_format(st.radio("Input Format: ", ["Plain Text", "FASTA"]))
+
+        with alignment_location:
+            self.set_alignment_location(st.radio("Alignment Location: ", ["Local", "Global"]))
