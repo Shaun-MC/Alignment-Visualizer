@@ -48,3 +48,6 @@ class MultipleAlignment:
         # We don't need to parse input here as it's handled in a different class
         # This function only has retrieve it from the user - Include in documentation in the beginning of the function
         self._set_unparsed_sequences(retrieve_sequences_input())
+
+    def execute_alignment(self, sequences, scoring_matrix):
+        pass

@@ -33,7 +33,7 @@ class SingleAlignment:
         with s2_input:
             self._set_second_sequence(st.text_area(label="S2: ", value="", height=self.max_height_pixels, max_chars=self.max_char_input))
 
-    def executeAlignment():
+    def execute_alignment(self, sequences, scoring_matrix):
         """
         Purpose
         ----------
