@@ -7,6 +7,7 @@ class ScoringMatrixFactory:
     def create_scoring_matrix(using_scoring_matrix_option, sequence_type_option):
 
         if using_scoring_matrix_option == "No":
+            # todo: return default scoring matrix for DNA, RNA and Protein
             return None
         
         match sequence_type_option:

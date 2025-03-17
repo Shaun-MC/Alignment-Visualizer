@@ -1,7 +1,19 @@
 import streamlit as st
+from typing import List
 import sys
 import time
 
+class Cell:
+            def __init__(self, score: int, direction: str):
+                self.score = score
+                self.direction = direction
+
+            def __str__(self) -> str:
+                return f"Cell(score={self.score}, direction='{self.direction}')"
+
+            def __repr__(self) -> str:
+                return self.__str__()
+            
 class SingleAlignment:
     def __init__(self):
         self.max_char_input = 20
@@ -34,35 +46,10 @@ class SingleAlignment:
         with s2_input:
             self._set_second_sequence(st.text_area(label="S2: ", value="", height=self.max_height_pixels, max_chars=self.max_char_input))
 
-    def execute_alignment(self, input_txt: list, scoring_matrix) -> str:
-        """
-        Purpose
-        ----------
-        Run the alignment on the provided list of strings.
+    def fill_table_w_scores(self, input_txt: list, scoring_matrix) -> List[List[Cell]]:
 
-        Parameters
-        ----------
-        input_txt : list
-            List of strings to be aligned.
-
-        Returns
-        -------
-        str
-            Result of the alignment.
-        """
-
-        class Cell:
-            def __init__(self, score: int, direction: str):
-                self.score = score
-                self.direction = direction
-
-            def __str__(self) -> str:
-                return f"Cell(score={self.score}, direction='{self.direction}')"
-
-            def __repr__(self) -> str:
-                return self.__str__()
-            
-        # Create a DataFrame with input_txt[0] on the y-axis and input_txt[1] on the x-axis
+        
+         # Create a DataFrame with input_txt[0] on the y-axis and input_txt[1] on the x-axis
         y_axis = ["_"] + list(input_txt[0])
         x_axis = ["_"] + list(input_txt[1])
         
@@ -195,6 +182,7 @@ class SingleAlignment:
                 table_html += "</tr>"
             table_html += "</tbody></table>"
                 
+            #todo: alignment
             table_placeholder.markdown(table_html, unsafe_allow_html=True)
             time.sleep(1)
             # show the scores
@@ -216,6 +204,7 @@ class SingleAlignment:
                 for col in range(len(x_axis)):
                     # If this cell should be filled (we've reached it in our iteration)
                     if row < curRow or (row == curRow and col <= curCol):
+                        # todo: display fancy direction
                         table_html += f"<td>{scores[row][col].score}{scores[row][col].direction}</td>"
                     else:
                         table_html += "<td></td>"
@@ -224,10 +213,26 @@ class SingleAlignment:
 
             table_placeholder.markdown(table_html, unsafe_allow_html=True)
 
-    
+        return scores
+
+
+    def execute_alignment(self, input_txt: list, scoring_matrix) -> str:
+        """
+        Purpose
+        ----------
+        Run the alignment on the provided list of strings.
+
+        Parameters
+        ----------
+        input_txt : list
+            List of strings to be aligned.
+
+        Returns
+        -------
+        str
+            Result of the alignment.
+        """
+        scores = self.fill_table_w_scores(input_txt, scoring_matrix)
         #todo: display alignment
-        # st.write("Alignment:")
-        # st.write("A T C T G A T _ C")
-        # st.write("_ T G _ C A T A C")
-        # st.write("Score: 27")
+        #todo: display score
         return "\n"
