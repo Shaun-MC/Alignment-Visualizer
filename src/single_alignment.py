@@ -2,6 +2,8 @@ import streamlit as st
 from typing import List
 import sys
 import time
+import numpy as np
+import pandas as pd
 
 class Cell:
     def __init__(self, score: int, direction: str):
@@ -152,17 +154,29 @@ class SingleAlignment:
                         else:
                             diagonalscore = int(scores[row - 1][col - 1].score)
 
-                        #access scoring matrix
-                        indelLpen =  int(scoring_matrix.at[leftLetter, '_'])
-                        indelTpen =  int(scoring_matrix.at['_', topLetter])
-                        matchLTpen =  int(scoring_matrix.at[leftLetter, topLetter])
+                        indelLpen = min_int
+                        indelTpen = min_int
+                        matchLTpen = min_int
+                        #access scoring matrix /////////////////////////////////
+                        # handle assymetrical matrix filled with some 'none'
+                        if pd.isna(scoring_matrix.at[leftLetter, '_']):
+                            indelLpen =  int(scoring_matrix.at['_', leftLetter])
+                        else:
+                            indelLpen =  int(scoring_matrix.at[leftLetter, '_'])
+
+                        if pd.isna(scoring_matrix.at['_', topLetter]):
+                            indelTpen =  int(scoring_matrix.at[topLetter, '_'])
+                        else:
+                            indelTpen =  int(scoring_matrix.at['_', topLetter])
+
+                        if pd.isna(scoring_matrix.at[leftLetter, topLetter]):
+                            matchLTpen =  int(scoring_matrix.at[topLetter, leftLetter])
+                        else: 
+                            matchLTpen =  int(scoring_matrix.at[leftLetter, topLetter])
                         
                         indelLscore = int(indelLpen + topscore)
-                        # print(indelLscore)
                         indelTscore = int(indelTpen + leftscore)
-                        # print(indelTscore)
                         diagMatchScore = int(matchLTpen + diagonalscore)
-                        # print(diagMatchScore)
 
                         bestScore = max(indelLscore, indelTscore, diagMatchScore)
                         bestDirection = ""
