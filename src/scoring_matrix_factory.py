@@ -2,6 +2,7 @@ from dna_scoring_matrix import DNAScoringMatrix
 from rna_scoring_matrix import RNAScoringMatrix
 from protein_scoring_matrix import ProteinScoringMatrix
 from default_dna_scoring_matrix import DefaultDNAScoringMatrix
+from default_rna_scoring_matrix import DefaultRNAScoringMatrix
 
 class ScoringMatrixFactory:
     @staticmethod
@@ -14,7 +15,7 @@ class ScoringMatrixFactory:
                     return DefaultDNAScoringMatrix()
                 case "RNA":
                     # todo: make defautl rna matrix
-                    return RNAScoringMatrix()
+                    return DefaultRNAScoringMatrix()
                 case "Protein":
                     # todo: make defautl protein matrix
                     return ProteinScoringMatrix()
