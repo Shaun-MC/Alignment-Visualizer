@@ -1,6 +1,11 @@
 class PlainTextInput:
+    # This class doesn't need to store data
+    def __init__(self):
+        pass
 
-    @staticmethod
+    def cleanSequences(self, sequences: str) -> list:
+        return [] if sequences == "" else sequences.splitlines()
+    
     def validateFileFormat(sequences) -> bool:
 
         sequences = sequences.splitlines()

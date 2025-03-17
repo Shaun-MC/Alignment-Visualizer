@@ -1,7 +1,23 @@
 class FASTAInput():
     # This class doesn't need to store data
+    def __init__(self):
+        pass
 
-    @staticmethod
+    def cleanSequences(self, sequences: str) -> list:
+
+        if sequences == "":
+            return []
+        
+        ret = []
+        sequences = sequences.splitlines()
+                    
+        for line in sequences:
+
+            if line[0] != ">":
+                ret.append(line)
+                    
+        return ret
+        
     def validateFileFormat(sequences) -> bool:
 
         sequences = sequences.splitlines()
