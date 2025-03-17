@@ -1,14 +1,13 @@
 import streamlit as st
+from input_format_factory import InputFormatFactory
 from io import StringIO
 
 class MultipleAlignment:
-    def __init__(self):
+    def __init__(self, input_type):
         self.max_char_input = 100
         self.max_height_pixels = 150
-        self.input_header = f"Input (Max {self.max_char_input} Characters)"
-        self.upload_header = "Upload a Text File"
-
         self.unparsed_sequences = None
+        self.input_type = InputFormatFactory.create_input_format(input_type)
 
     def _set_unparsed_sequences(self, sequences):
         self.unparsed_sequences = sequences
@@ -18,11 +17,11 @@ class MultipleAlignment:
 
     def handle_input(self) -> None:
 
-        st.header(self.input_header)
+        st.header(f"Input (Max {self.max_char_input} Characters)")
 
         def retrieve_sequences_input() -> str:
             
-            uploaded_file = st.file_uploader(self.upload_header, type=["txt"])
+            uploaded_file = st.file_uploader("Upload a Text File", type=["txt"])
             file_input = None
 
             if uploaded_file is not None:
