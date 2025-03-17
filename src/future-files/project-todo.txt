@@ -1,31 +1,36 @@
 Bug Report
 
-Uploading a file w/ during Multiple Alignment Path removes the input text box
- - Doesn't matter whether the file passes validation
 
 Todo List
 
-TODO: SCORING MATRIX
-    - Row titles shouldn't be able to be edited
-    - Titles aren't updated for the sequence types, always DNA
-    - Initialize bottom triangle to none or have 0 values and unable to edit them
+TODO: Add a header and footer than aligns w/ the design of other Prof. Kim programs - WIP
+
+TODO: Add Input Testing - WIP
+    - Use pytest
+    - Write test cases in test_multiple_alignment_tests.py & test_single_alignment_tests.py
+    - Until sequencing algorithm is implemented, can only test negative path cases, searching for bugs/errors
+
+TODO: Scoring Matrix - WIP
+    - Row and column titles shouldn't be able to be edited - WIP
+    - Initialize bottom triangle to none or have 0 values and unable to edit them - DONE
+
+TODO: Configure the Single Alignment algorithm for global / local, and not including a scoring matrix vs not - WIP
+
+TODO: Retrieve blosum64 matrix from the file and store it in the file
+
+TODO: Figure out Multiple Alignment Algorithm - WIP
 
 TODO: Add a character and string limit to Multiple Alignment text input - DONE
     - Verify from file input as well
 
-TODO: Be able to visualize the text for multiple alignment type file input
+TODO: Be able to visualize the text for multiple alignment type file input - DONE
     - List each key (if present) and string in the file 
-
-TODO: Add Input Testing
-    - Use pytest
-    - Write test cases in test_multiple_alignment_tests.py & test_single_alignment_tests.py
-    - Until sequencing algorithm is implemented, can only test negative path cases, searching for bugs/errors
     
-TODO: Refactor 'streamlit_app.py' into seperate modules / files
+TODO: Refactor 'streamlit_app.py' into seperate modules / files - DONE
     - i.e.:
     - Input Settings 
     - Input & Input Parsing
     - Alignment execution 
     - etc.
 
-TODO: Add a header and footer than aligns w/ the design of other Prof. Kim programs
+
