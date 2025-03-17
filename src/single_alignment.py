@@ -15,8 +15,8 @@ class SingleAlignment:
     def _set_second_sequence(self, S2):
         self.S2 = S2
 
-    def get_unparsed_sequences(self) -> list:
-        return [self.S1, self.S2]
+    def get_unparsed_sequences(self):
+        return [self.S1, self.S2] if self.S1 != "" and self.S2 != "" else []
 
     def handle_input(self):
 
@@ -33,7 +33,7 @@ class SingleAlignment:
         with s2_input:
             self._set_second_sequence(st.text_area(label="S2: ", value="", height=self.max_height_pixels, max_chars=self.max_char_input))
 
-    def execute_alignment(self, sequences, scoring_matrix):
+    def execute_alignment(self, input_txt: list, scoring_matrix) -> str:
         """
         Purpose
         ----------
@@ -84,25 +84,38 @@ class SingleAlignment:
             matrix.append(row)
 
         #todo: calculate scores
+        # scores = []
+        # row0 = [0,-1,-3,-4,-5,-6,-7,-8]
+        # scores.append(row0)
+        # row1 = [-1,1,-1,-2,1,0,-1,-2]
+        # scores.append(row1)
+        # row2 = [-2,5,3,2,1,7,6,5]
+        # scores.append(row2)
+        # row3 = [-3,4,8,10,9,8,7,13]
+        # scores.append(row3)
+        # row4 = [-4,3,7,9,11,15,14,13]
+        # scores.append(row4)
+        # row5 = [-6,1,10,10,9,13,13,17]
+        # scores.append(row5)
+        # row6 = [-7,0,9,9,15,14,18,17]
+        # scores.append(row6)
+        # row7 = [-8,-1,8,9,14,21,20,19]
+        # scores.append(row7)
+        # row8 = [-9,-2,7,15,14,20,20,27]
+        # scores.append(row8)
+        
+        #fill a score table with lowest possible scores
+        min_int = -sys.maxsize - 1
         scores = []
-        row0 = [0,-1,-3,-4,-5,-6,-7,-8]
-        scores.append(row0)
-        row1 = [-1,1,-1,-2,1,0,-1,-2]
-        scores.append(row1)
-        row2 = [-2,5,3,2,1,7,6,5]
-        scores.append(row2)
-        row3 = [-3,4,8,10,9,8,7,13]
-        scores.append(row3)
-        row4 = [-4,3,7,9,11,15,14,13]
-        scores.append(row4)
-        row5 = [-6,1,10,10,9,13,13,17]
-        scores.append(row5)
-        row6 = [-7,0,9,9,15,14,18,17]
-        scores.append(row6)
-        row7 = [-8,-1,8,9,14,21,20,19]
-        scores.append(row7)
-        row8 = [-9,-2,7,15,14,20,20,27]
-        scores.append(row8)
+        for i in range(len(y_axis)):
+            row = []
+            for j in range(len(x_axis)):
+                cell = Cell(min_int, "x")
+                row.append(cell)
+            scores.append(row)
+
+        print(len(scores))
+        print(len(scores[0]))
 
         #iterate through the table scoring
         for num in range(len(y_axis) * len(x_axis) + 1):
@@ -136,10 +149,59 @@ class SingleAlignment:
                 for col in range(len(x_axis)):
                     # If this cell should be filled (we've reached it in our iteration)
                     if (row < curRow):
-                        table_html += f"<td>{scores[row][col]}</td>"
+                        table_html += f"<td>{scores[row][col].score}</td>"
                     elif (row <= curRow and col < curCol):
-                        table_html += f"<td>{scores[row][col]}</td>"
+                        table_html += f"<td>{scores[row][col].score}</td>"
                     elif (row == curRow and col == curCol):
+                        topLetter = x_axis[col]
+                        leftLetter = y_axis[row]
+
+                        #pull surronding scores
+                        leftscore = min_int
+                        topscore = min_int
+                        diagonalscore = min_int
+                        if ((col - 1) < 0):
+                            leftscore = 0
+                        else:
+                            leftscore = int(scores[row][col - 1].score)
+
+                        if ((row - 1) < 0 ):
+                            topscore = 0
+                        else:
+                            topscore = int(scores[row - 1][col].score)
+
+                        if (row - 1 < 0 or col - 1 < 0):
+                            diagonalscore = 0
+                        else:
+                            diagonalscore = int(scores[row - 1][col - 1].score)
+
+                        #print(leftLetter + topLetter)
+
+                        #todo: access scoring matrix
+                        indelLpen =  int(edited_df.at[leftLetter, '_'])
+                        indelTpen =  int(edited_df.at['_', topLetter])
+                        matchLTpen =  int(edited_df.at[leftLetter, topLetter])
+                        
+
+                        indelLscore = int(indelLpen + topscore)
+                        print(indelLscore)
+                        indelTscore = int(indelTpen + leftscore)
+                        print(indelTscore)
+                        diagMatchScore = int(matchLTpen + diagonalscore)
+                        print(diagMatchScore)
+
+                        bestScore = max(indelLscore, indelTscore, diagMatchScore)
+                        #print("\t" + str(bestScore))
+                        bestDirection = ""
+                        if (bestScore == indelLscore):
+                            bestDirection += "|" #down
+                        if (bestScore == indelTscore):
+                            bestDirection += "--" #left
+                        if (bestScore == diagMatchScore):
+                            bestDirection += "\\" #diagonal
+                        
+                        scores[row][col].score = bestScore
+                        scores[row][col].direction = bestDirection
                         table_html += f"<td>{matrix[row][col]}</td>"
                     else:
                         table_html += "<td></td>"
@@ -148,7 +210,6 @@ class SingleAlignment:
                 
             table_placeholder.markdown(table_html, unsafe_allow_html=True)
             time.sleep(1)
-            # todo: this is hard coded
             # show the scores
 
             # edit table
@@ -168,7 +229,7 @@ class SingleAlignment:
                 for col in range(len(x_axis)):
                     # If this cell should be filled (we've reached it in our iteration)
                     if row < curRow or (row == curRow and col <= curCol):
-                        table_html += f"<td>{scores[row][col]}</td>"
+                        table_html += f"<td>{scores[row][col].score}{scores[row][col].direction}</td>"
                     else:
                         table_html += "<td></td>"
                 table_html += "</tr>"
@@ -178,8 +239,8 @@ class SingleAlignment:
 
     
         #todo: display alignment
-        st.write("Alignment:")
-        st.write("A T C T G A T _ C")
-        st.write("_ T G _ C A T A C")
-        st.write("Score: 27")
+        # st.write("Alignment:")
+        # st.write("A T C T G A T _ C")
+        # st.write("_ T G _ C A T A C")
+        # st.write("Score: 27")
         return "\n"

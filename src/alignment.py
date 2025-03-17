@@ -62,13 +62,20 @@ class Alignment:
             
             unparsed_sequence_input = self.alignment_type.get_unparsed_sequences()
 
-            return self.sequence_type.validate_encoding(unparsed_sequence_input)
+            self.sequence_type.validate_encoding(unparsed_sequence_input)
 
+            return self.sequence_type.get_validated_sequences()
+        
         sequence_input = retrieve_sequence_input()
-
-        if sequence_input is None:
+        
+        if not sequence_input:
             return
 
-        self.alignment_type.execute_alignment(sequence_input, self.scoring_matrix)
+        def execute_alignment(sequence_input):
 
-        
+            # Start executing alginemnt 
+            if st.button("Run Alignment"):
+                st.write("Running Alignment...")
+                st.write(self.alignment_type.execute_alignment(sequence_input, self.scoring_matrix))
+            
+        execute_alignment(sequence_input)
