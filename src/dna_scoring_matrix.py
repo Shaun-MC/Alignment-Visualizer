@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 class DNAScoringMatrix:
-
+    # todo either mirror input on diagonal axis or make a symetrical 
     def __init__(self):
         self.scoring_matrix = None
         self.total_characters = 5

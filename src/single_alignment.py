@@ -88,6 +88,7 @@ class SingleAlignment:
         curRow = 0
         curColumn = 0
 
+        # todo: get rid of this
         #calculate matrix letter matrix
         matrix = []
         for i in range(len(y_axis)):
@@ -105,9 +106,7 @@ class SingleAlignment:
                 cell = Cell(min_int, "x")
                 row.append(cell)
             scores.append(row)
-
-        print(len(scores))
-        print(len(scores[0]))
+        scores[0][0].score = 0
 
         #iterate through the table scoring
         for num in range(len(y_axis) * len(x_axis) + 1):
@@ -167,22 +166,19 @@ class SingleAlignment:
                         else:
                             diagonalscore = int(scores[row - 1][col - 1].score)
 
-                        #print(leftLetter + topLetter)
-
-                        #todo: access scoring matrix
+                        #access scoring matrix
                         indelLpen =  int(scoring_matrix.at[leftLetter, '_'])
                         indelTpen =  int(scoring_matrix.at['_', topLetter])
                         matchLTpen =  int(scoring_matrix.at[leftLetter, topLetter])
                         
                         indelLscore = int(indelLpen + topscore)
-                        print(indelLscore)
+                        # print(indelLscore)
                         indelTscore = int(indelTpen + leftscore)
-                        print(indelTscore)
+                        # print(indelTscore)
                         diagMatchScore = int(matchLTpen + diagonalscore)
-                        print(diagMatchScore)
+                        # print(diagMatchScore)
 
                         bestScore = max(indelLscore, indelTscore, diagMatchScore)
-                        #print("\t" + str(bestScore))
                         bestDirection = ""
                         if (bestScore == indelLscore):
                             bestDirection += "|" #down
