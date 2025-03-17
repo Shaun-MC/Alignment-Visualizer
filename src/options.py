@@ -56,4 +56,4 @@ class Options:
             self.set_using_scoring_matrix(st.radio("Using a Scoring Matrix?", ["No", "Yes"]))
 
         with file_formats:
-            self.set_input_format(st.radio("Input Format: ", ["Input Text", "FASTA"]))
+            self.set_input_format(st.radio("Input Format: ", ["Plain Text", "FASTA"]))

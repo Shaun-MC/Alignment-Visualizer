@@ -5,6 +5,7 @@ class InputFormatFactory:
     @staticmethod
 
     def create_input_format(input_format_option):
+
         match input_format_option:
             case "FASTA":
                 return FASTAInput()

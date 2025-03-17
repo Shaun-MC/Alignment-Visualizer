@@ -15,10 +15,10 @@ class SingleAlignment:
     def _set_second_sequence(self, S2):
         self.S2 = S2
 
-    def retrieve_input(self) -> list:
+    def get_unparsed_sequences(self) -> list:
         return [self.S1, self.S2]
 
-    def handleInput(self):
+    def handle_input(self):
 
         st.header(self.input_header)
 

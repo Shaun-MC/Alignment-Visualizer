@@ -6,7 +6,7 @@ class ScoringMatrixFactory:
     @staticmethod
     def create_scoring_matrix(using_scoring_matrix_option, sequence_type_option):
 
-        if using_scoring_matrix_option is None:
+        if using_scoring_matrix_option == "No":
             return None
         
         match sequence_type_option:

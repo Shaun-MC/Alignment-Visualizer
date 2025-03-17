@@ -58,9 +58,9 @@ class Alignment:
             # Depending on the alignment, the respective handleInput() will be called
             # Deciding if there should be a base class for alignment_type of if SingleAlignment and MultipleAlignment are fine as is
             # Test to make sure the correct function is called
-            self.alignment_type.handleInput()
+            self.alignment_type.handle_input()
             
-            unparsed_sequence_input = self.alignment_type.get_sequence_input()
+            unparsed_sequence_input = self.alignment_type.get_unparsed_sequences()
 
             st.write("Hello")
 
