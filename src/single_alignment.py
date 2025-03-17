@@ -6,7 +6,6 @@ class SingleAlignment:
     def __init__(self):
         self.max_char_input = 20
         self.max_height_pixels = 68
-        self.input_header = f"Input (Max {self.max_char_input} Characters)"
 
         self.S1 = None
         self.S2 = None
@@ -22,7 +21,7 @@ class SingleAlignment:
 
     def handle_input(self):
 
-        st.header(self.input_header)
+        st.header(f"Input (Max {self.max_char_input} Characters)")
 
         # Declare the options variables for single alignment input
         s1_input, s2_input = st.columns(2)
