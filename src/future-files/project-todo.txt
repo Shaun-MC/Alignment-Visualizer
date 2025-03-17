@@ -3,7 +3,9 @@ Bug Report
 
 Todo List
 
-TODO: Add a header and footer than aligns w/ the design of other Prof. Kim programs - WIP
+TODO: Figure out Header & footer
+    - Implemented correcly
+    - See if the footer can be permantely placed at the bottom, currently removed when alignment is executed
 
 TODO: Add Input Testing - WIP
     - Use pytest
