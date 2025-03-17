@@ -4,15 +4,15 @@ import sys
 import time
 
 class Cell:
-            def __init__(self, score: int, direction: str):
-                self.score = score
-                self.direction = direction
+    def __init__(self, score: int, direction: str):
+        self.score = score
+        self.direction = direction
 
-            def __str__(self) -> str:
-                return f"Cell(score={self.score}, direction='{self.direction}')"
+    def __str__(self) -> str:
+        return f"Cell(score={self.score}, direction='{self.direction}')"
 
-            def __repr__(self) -> str:
-                return self.__str__()
+    def __repr__(self) -> str:
+        return self.__str__()
             
 class SingleAlignment:
     def __init__(self):
@@ -46,13 +46,12 @@ class SingleAlignment:
         with s2_input:
             self._set_second_sequence(st.text_area(label="S2: ", value="", height=self.max_height_pixels, max_chars=self.max_char_input))
 
-    def fill_table_w_scores(self, input_txt: list, scoring_matrix) -> List[List[Cell]]:
-
+    def fill_table_w_scores(self, input_txt: list, scoring_matrix, animation_speed) -> List[List[Cell]]:
         
-         # Create a DataFrame with input_txt[0] on the y-axis and input_txt[1] on the x-axis
+        # Create a DataFrame with input_txt[0] on the y-axis and input_txt[1] on the x-axis
         y_axis = ["_"] + list(input_txt[0])
         x_axis = ["_"] + list(input_txt[1])
-        
+            
         # Create a custom HTML table with non-unique column and row names
         table_html = "<table><thead><tr><th></th>"
         for col in x_axis:
@@ -104,7 +103,7 @@ class SingleAlignment:
                 table_placeholder.empty()
             
             # st.session_state.visible = not st.session_state.visible
-            time.sleep(1)
+            time.sleep(animation_speed)
 
             # Calculate current row and column positions
             curRow = num // len(x_axis)
@@ -184,7 +183,7 @@ class SingleAlignment:
                 
             #todo: alignment
             table_placeholder.markdown(table_html, unsafe_allow_html=True)
-            time.sleep(1)
+            time.sleep(animation_speed)
             # show the scores
 
             # edit table
@@ -215,8 +214,7 @@ class SingleAlignment:
 
         return scores
 
-
-    def execute_alignment(self, input_txt: list, scoring_matrix) -> str:
+    def execute_alignment(self, input_txt: list, scoring_matrix, animation_speed) -> str:
         """
         Purpose
         ----------
@@ -232,7 +230,7 @@ class SingleAlignment:
         str
             Result of the alignment.
         """
-        scores = self.fill_table_w_scores(input_txt, scoring_matrix)
+        scores = self.fill_table_w_scores(input_txt, scoring_matrix, animation_speed)
         #todo: display alignment
-        #todo: display score
+        #todo: display score - only return the score, display is handled elsewhere
         return "\n"
