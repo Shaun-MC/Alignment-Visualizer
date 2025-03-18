@@ -75,15 +75,6 @@ class SingleAlignment:
 
         curRow = 0
         curColumn = 0
-
-        # todo: get rid of this
-        #calculate matrix letter matrix
-        matrix = []
-        for i in range(len(y_axis)):
-            row = []
-            for j in range(len(x_axis)):
-                row.append(y_axis[i] + x_axis[j])
-            matrix.append(row)
         
         #fill a score table with lowest possible scores
         min_int = -sys.maxsize - 1
@@ -189,17 +180,18 @@ class SingleAlignment:
                         
                         scores[row][col].score = bestScore
                         scores[row][col].direction = bestDirection
-                        table_html += f"<td>{matrix[row][col]}</td>"
+                        table_html += f"<td>{leftLetter+topLetter}</td>"
                     else:
                         table_html += "<td></td>"
                 table_html += "</tr>"
             table_html += "</tbody></table>"
                 
-            #todo: alignment
+            
             table_placeholder.markdown(table_html, unsafe_allow_html=True)
             time.sleep(animation_speed)
             # show the scores
 
+            # TODO fix whitespace in table so it doesn't expand and contract
             # edit table
             table_html = "<table><thead><tr><th></th>"
             for col in range(len(x_axis)):
@@ -225,8 +217,112 @@ class SingleAlignment:
             table_html += "</tbody></table>"
 
             table_placeholder.markdown(table_html, unsafe_allow_html=True)
+        
+        self.findBestPath(scores, x_axis, y_axis)
 
         return scores
+
+    def showBestPath(self, pathCoordinates: List[tuple], scores, x_axis, y_axis):
+       
+        table_html = "<table><thead><tr><th></th>"
+
+        # write the labels at the top of the table
+        for col in x_axis:
+            table_html += f"<th> {col} </th>"
+        table_html += "</tr></thead><tbody>"
+
+        # Write the labels on the left side and the scores in the cells
+        for row_idx, row_label in enumerate(y_axis):
+            table_html += f"<tr><td> {row_label} </td>"
+            for col_idx in range(len(x_axis)):
+                score = scores[row_idx][col_idx].score
+                inPath = False
+                for coordinates in pathCoordinates:
+                    temp = [row_idx, col_idx]
+                    if temp == coordinates:
+                        inPath = True
+                if (inPath):
+                    table_html += f"<td>({score})</td>"
+                else:
+                    table_html += f"<td>{score}</td>"
+            table_html += "</tr>"
+        table_html += "</tbody></table>"
+        
+        # Display the table in Streamlit
+        st.markdown(table_html, unsafe_allow_html=True)
+        
+
+    def findBestPath(self, scores, x_axis, y_axis) -> str:
+        # TODO handle assymetrical tables
+        isStart = False
+        row = len(scores) - 1
+        col = len(scores[0]) - 1
+        min_int = -sys.maxsize - 1
+        path = ""
+        isBottom = True
+        pathCoordinates = [[0,0]]
+        while(isStart == False):
+            moveOptions = scores[row][col].direction
+            leftScore = min_int
+            diagScore = min_int
+            topScore = min_int
+            if "--" in moveOptions:
+                if col - 1 < 0:
+                    leftScore = min_int
+                leftScore = scores[row][col - 1].score
+            if "\\" in moveOptions:
+                if row - 1 < 0 and col - 1 < 0:
+                    diagScore = min_int
+                diagScore = scores[row - 1][col - 1].score
+            if "|" in moveOptions:
+                if col - 1 < 0:
+                    topScore = min_int
+                topScore = scores[row - 1][col].score
+
+            bestScore = max(leftScore, diagScore, topScore)
+
+            if bestScore == diagScore:
+                pathCoordinates.append([row, col])
+                row = row-1
+                if (row < 0):
+                    row = 0
+                col = col-1
+                if (col < 0):
+                    col = 0
+                if (isBottom):
+                    path += str(bestScore) + " " 
+                    isBottom = False
+                else:
+                    path += "\\" + str(bestScore) + " " 
+            elif bestScore == topScore:
+                pathCoordinates.append([row, col])
+                row = row - 1
+                if (row < 0):
+                    row = 0
+                if (isBottom):
+                    path += str(bestScore) + " "
+                    isBottom = False
+                else: 
+                    path += "|" + str(bestScore) + " "
+            elif bestScore == leftScore:
+                pathCoordinates.append([row, col])
+                col = col - 1
+                if (col < 0):
+                    col = 0
+                if (isBottom):
+                    path += str(bestScore) + " "
+                    isBottom = False
+                else:
+                    path += "--" + str(bestScore) + " "
+            
+
+            if row == 0 and col == 0:
+                isStart = True
+                break
+
+        path = path[::-1]
+        self.showBestPath(pathCoordinates, scores, x_axis, y_axis)
+        return path
 
     def execute_alignment(self, input_txt: list, scoring_matrix, animation_speed) -> str:
         """
@@ -245,6 +341,7 @@ class SingleAlignment:
             Result of the alignment.
         """
         scores = self.fill_table_w_scores(input_txt, scoring_matrix, animation_speed)
+    
         #todo: display alignment
         #todo: display score - only return the score, display is handled elsewhere
         return "\n"
