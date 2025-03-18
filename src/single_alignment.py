@@ -189,7 +189,7 @@ class SingleAlignment:
                 
             
             table_placeholder.markdown(table_html, unsafe_allow_html=True)
-            print(animation_speed)
+           
             time.sleep(animation_speed)
             # show the scores
 
