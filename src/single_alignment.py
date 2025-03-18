@@ -175,7 +175,7 @@ class SingleAlignment:
                         if (bestScore == indelLscore):
                             bestDirection += "|" #down
                         if (bestScore == indelTscore):
-                            bestDirection += "--" #left
+                            bestDirection += "-" #left
                         if (bestScore == diagMatchScore):
                             bestDirection += "\\" #diagonal
                         
@@ -253,6 +253,39 @@ class SingleAlignment:
         # Display the table in Streamlit
         st.markdown(table_html, unsafe_allow_html=True)
         
+    def getAlignment(self, path, x_axis, y_axis) -> str:
+        x_str = x_axis[1:]
+        y_str = y_axis[1:]
+        source = "" #y_axis
+        destination = "" #x_axis
+        col = 0
+        row = 0
+        for direction in path:
+            
+            if direction == "|":
+                source += y_str[row]
+                destination += "_"
+                row += 1
+
+            if direction == "-":
+               
+                source += "_"
+                destination += x_str[col]
+                col += 1
+            if direction == "\\":
+                source += y_str[row]
+                destination += x_str[col]
+                row += 1
+                col += 1
+        
+        st.write("Alignment: ")
+        st.write(source)
+        st.write(destination)
+
+        alignment = source + " \n " + destination
+
+        return alignment
+
 
     def findBestPath(self, scores, x_axis, y_axis) -> str:
         
@@ -261,14 +294,15 @@ class SingleAlignment:
         col = len(scores[0]) - 1
         min_int = -sys.maxsize - 1
         path = ""
-        isBottom = True
         pathCoordinates = [[0,0]]
+        totalScore = scores[row][col].score
+        
         while(isStart == False):
             moveOptions = scores[row][col].direction
             leftScore = min_int
             diagScore = min_int
             topScore = min_int
-            if "--" in moveOptions:
+            if "-" in moveOptions:
                 if col - 1 < 0:
                     leftScore = min_int
                 leftScore = scores[row][col - 1].score
@@ -283,62 +317,65 @@ class SingleAlignment:
 
             bestScore = max(leftScore, diagScore, topScore)
 
-            if bestScore == diagScore:
+            if (row == 0 and col > 0):
                 pathCoordinates.append([row, col])
-                row = row-1
-                if (row < 0):
-                    row = 0
-                col = col-1
-                if (col < 0):
-                    col = 0
-                if (isBottom):
-                    path += str(bestScore) + " " 
-                    isBottom = False
-                else:
-                    path += "\\" + str(bestScore) + " " 
-            elif bestScore == topScore:
-                pathCoordinates.append([row, col])
-                row = row - 1
-                if (row < 0):
-                    row = 0
-                if (isBottom):
-                    path += str(bestScore) + " "
-                    isBottom = False
-                else: 
-                    path += "|" + str(bestScore) + " "
-            elif bestScore == leftScore:
-                pathCoordinates.append([row, col])
+                path += "-"
                 col = col - 1
-                if (col < 0):
-                    col = 0
-                if (isBottom):
-                    path += str(bestScore) + " "
-                    isBottom = False
-                else:
-                    path += "--" + str(bestScore) + " "
-            
+            elif (col == 0 and row > 0):
+                pathCoordinates.append([row, col])
+                path += "|"
+                row = row - 1
+            else:
+                if bestScore == diagScore:
+                    pathCoordinates.append([row, col])
+                    row = row-1
+                    if (row < 0):
+                        row = 0
+                    col = col-1
+                    if (col < 0):
+                        col = 0
+                   
+                    path += "\\" + " " 
+                elif bestScore == topScore:
+                    pathCoordinates.append([row, col])
+                    row = row - 1
+                    if (row < 0):
+                        row = 0
+                    
+                    path += "|" + " "
+                elif bestScore == leftScore:
+                    pathCoordinates.append([row, col])
+                    col = col - 1
+                    if (col < 0):
+                        col = 0
+                    
+                    path += "-" + " "
             
             if row == 0 and col == 0:
                 isStart = True
                 break
 
         path = path[::-1]
+        
         self.showBestPath(pathCoordinates, scores, x_axis, y_axis)
+        alignment = self.getAlignment(path, x_axis, y_axis)
+        st.write("Total Score:")
+        st.write(str(totalScore))
         return path
 
     def execute_alignment(self, input_txt: list, scoring_matrix, animation_speed) -> str:
         """
         Purpose
-        ----------
+        -----
         Run the alignment on the provided list of strings.
 
         Parameters
-        ----------
+        -----
         input_txt : list
             List of strings to be aligned.
 
         Returns
-        -------
+        ----
         str
             Result of the alignment.
         """
