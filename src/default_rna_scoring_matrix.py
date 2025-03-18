@@ -9,7 +9,6 @@ class DefaultRNAScoringMatrix:
         self.total_characters = 5
 
         # Initialize the matrix
-        st.header("Custom Scoring Matrix")
         labels = ["_", "A", "G", "C", "U"]
 
         data = {

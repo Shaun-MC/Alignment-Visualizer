@@ -9,7 +9,6 @@ class DefaultDNAScoringMatrix:
         self.scoring_matrix = None
 
         # Initialize the matrix
-        st.header("Custom Scoring Matrix")
         labels = ["_", "A", "G", "C", "T"]
         # Hard-coded data for the scoring matrix
         data = {
