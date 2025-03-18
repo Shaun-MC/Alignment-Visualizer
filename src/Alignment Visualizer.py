@@ -13,6 +13,7 @@ if __name__ == "__main__":
                 text-align: center;
             padding: 20px;
             font-family: Arial, sans-serif;
+            border-radius: 15px; /* Rounded edges */
         }
         header h1 {
             margin: 0;
@@ -33,7 +34,7 @@ if __name__ == "__main__":
     """
 
     # Page Header
-    st.markdown(header, unsafe_allow_html=True), 
+    st.markdown(header, unsafe_allow_html=True) 
     
     program = Alignment()
     program.execute()
@@ -43,12 +44,14 @@ if __name__ == "__main__":
         <title>Custom Footer</title>
         <style>
             footer {
-                background-color: #ddd; /* Light gray background */
+                background-color: #660066; /* Dark purple background */
                 text-align: center;
                 padding: 10px;
-                font-family: Arial, sans-serif;
+                font-family: Arial;
                 font-size: 14px;
                 margin-top: 100px;
+                border-radius: 15px; /* Rounded edges */
+                line-height: 1.5; /* Line height for even spacing between lines */
             }
             footer a {
                 color: blue; /* Default link color */
@@ -62,6 +65,7 @@ if __name__ == "__main__":
         <body>
 
         <footer>
+            <p></p>
             <p>University of Washington Bothell CSSE</p>
             <p>This project was created by Shaun Cushman and Aaron Gröpper</p>
         </footer>
