@@ -2,7 +2,6 @@ from options import Options
 from scoring_matrix_factory import ScoringMatrixFactory
 from alignment_type_factory import AlignmentTypeFactory
 from sequence_type_factory import SequenceTypeFactory
-from input_format_factory import InputFormatFactory
 import streamlit as st
 
 class Alignment:
@@ -79,7 +78,7 @@ class Alignment:
             # Start executing alginemnt 
             if st.button("Run Alignment"):
 
-                # TODO When either of these modules are updated, the alignment algorithm resets
+                # TODO When this modules is updated, the alignment algorithm resets
                 pause = st.button("Pause")
                     
                 st.write(self.alignment_type.execute_alignment(sequence_input, self.scoring_matrix.scoring_matrix, animation_speed))
