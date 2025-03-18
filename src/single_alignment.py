@@ -17,6 +17,7 @@ class Cell:
         return self.__str__()
             
 class SingleAlignment:
+    
     def __init__(self):
         self.max_char_input = 20
         self.max_height_pixels = 68
@@ -188,6 +189,7 @@ class SingleAlignment:
                 
             
             table_placeholder.markdown(table_html, unsafe_allow_html=True)
+            print(animation_speed)
             time.sleep(animation_speed)
             # show the scores
 
@@ -253,7 +255,7 @@ class SingleAlignment:
         
 
     def findBestPath(self, scores, x_axis, y_axis) -> str:
-        # TODO handle assymetrical tables
+        
         isStart = False
         row = len(scores) - 1
         col = len(scores[0]) - 1
@@ -315,7 +317,7 @@ class SingleAlignment:
                 else:
                     path += "--" + str(bestScore) + " "
             
-
+            
             if row == 0 and col == 0:
                 isStart = True
                 break
@@ -340,6 +342,7 @@ class SingleAlignment:
         str
             Result of the alignment.
         """
+       
         scores = self.fill_table_w_scores(input_txt, scoring_matrix, animation_speed)
     
         #todo: display alignment

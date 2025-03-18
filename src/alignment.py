@@ -72,18 +72,16 @@ class Alignment:
             return
 
         def execute_alignment(sequence_input):
+            # TODO allow live animation speed changes
+
+            animation_speed = st.selectbox("Animation Speed (Seconds)", options=[2, 1, 0.5, .1, .05, 0])
 
             # Start executing alginemnt 
             if st.button("Run Alignment"):
 
-                animation_speed = st.selectbox("Animation Speed (Seconds)", options=[1, 2, 3, 4, 5])
-
                 # TODO When either of these modules are updated, the alignment algorithm resets
                 pause = st.button("Pause")
-
-                if animation_speed is not None:
-                    animation_speed = int(animation_speed)
                     
                 st.write(self.alignment_type.execute_alignment(sequence_input, self.scoring_matrix.scoring_matrix, animation_speed))
-            
+        
         execute_alignment(sequence_input)
