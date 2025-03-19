@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
+# Another matrix that could be added PAM250
+
 class ProteinScoringMatrix:
     def __init__(self):
 
