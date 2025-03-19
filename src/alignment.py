@@ -71,16 +71,36 @@ class Alignment:
             return
 
         def execute_alignment(sequence_input):
-            # TODO allow live animation speed changes
-
-            animation_speed = st.selectbox("Animation Speed (Seconds)", options=[2, 1, 0.5, .1, .05, 0])
-
+            
+            animation_speed = st.selectbox("Animation Speed (Seconds)", options=[2, 1, 0.5, 0])
             # Start executing alginemnt 
             if st.button("Run Alignment"):
 
-                # TODO When this modules is updated, the alignment algorithm resets
+                # TODO When this modules is updated, the alignment algorithm resets - figure how to keep the state of the alignment algorithm
+                # Should probably in the execute_alignment function to make that happen 
                 pause = st.button("Pause")
-                    
-                st.write(self.alignment_type.execute_alignment(sequence_input, self.scoring_matrix.scoring_matrix, animation_speed))
-        
-        execute_alignment(sequence_input)
+
+                return self.alignment_type.execute_alignment(sequence_input, self.scoring_matrix.scoring_matrix, animation_speed)
+
+            else:
+                return None, None, None
+            
+        formatted_alignments, lcs, score = execute_alignment(sequence_input)
+
+        def display_alignments(formatted_alignments, lcs, score):
+
+            if formatted_alignments is None or lcs is None or score is None:
+                return
+            
+            else:
+                st.header("Alignment Output")
+
+                st.write("S1: ", formatted_alignments[0])
+                st.write("S2: ", formatted_alignments[1])
+
+                st.write("Score: ", str(score))
+
+                st.header("Longest Common Subsequence")
+                st.write(lcs)
+
+        display_alignments(formatted_alignments, lcs, score)

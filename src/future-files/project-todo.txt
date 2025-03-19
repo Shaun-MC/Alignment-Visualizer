@@ -3,9 +3,7 @@ Bug Report
 
 Todo List
 
-TODO: Figure out Header & footer
-    - Implemented correcly
-    - See if the footer can be permantely placed at the bottom, currently removed when alignment is executed
+TODO: Local Alignment - Coming Soon & Protein Alignment
 
 TODO: Add Input Testing - WIP
     - Use pytest
@@ -22,6 +20,10 @@ TODO: Retrieve blosum64 matrix from the file and store it in the file
 
 TODO: Figure out Multiple Alignment Algorithm - WIP
 
+TODO: Figure out Header & footer
+    - Implemented correcly - DONE
+    - See if the footer can be permantely placed at the bottom, currently removed when alignment is executed - UNSURE IF POSSIBLE
+
 TODO: Add a character and string limit to Multiple Alignment text input - DONE
     - Verify from file input as well
 
@@ -36,3 +38,56 @@ TODO: Refactor 'streamlit_app.py' into seperate modules / files - DONE
     - etc.
 
 
+
+
+[0, 1] - Down
+Insertion: 0
+
+Deletion: -9223372036854775808
+
+Subsitution: -9223372036854775808
+
+[0, 2] - Down
+Insertion: 0
+
+Deletion: -9223372036854775808
+
+Subsitution: -9223372036854775808
+
+[1, 0] - Diag
+Insertion: -9223372036854775808
+
+Deletion: 0
+
+Subsitution: 0
+
+[2, 0] - Diag
+Insertion: 0
+
+Deletion: 0
+
+Subsitution: 0
+
+Insertion: 1
+
+Deletion: 0
+
+Subsitution: 0
+
+Insertion: -9223372036854775808
+
+Deletion: 0
+
+Subsitution: 1
+
+Insertion: 1
+
+Deletion: 1
+
+Subsitution: 0
+
+Insertion: 1
+
+Deletion: 1
+
+Subsitution: 1

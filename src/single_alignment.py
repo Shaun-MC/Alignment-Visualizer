@@ -49,182 +49,88 @@ class SingleAlignment:
         with s2_input:
             self._set_second_sequence(st.text_area(label="S2: ", value="", height=self.max_height_pixels, max_chars=self.max_char_input))
 
-    def fill_table_w_scores(self, input_txt: list, scoring_matrix, animation_speed) -> List[List[Cell]]:
-        
-        # Create a DataFrame with input_txt[0] on the y-axis and input_txt[1] on the x-axis
-        y_axis = ["_"] + list(input_txt[0])
-        x_axis = ["_"] + list(input_txt[1])
+    def _fill_table_w_scores(self, y_axis: list, x_axis: list, scoring_matrix) -> list[list[Cell]]:
+
+        def init_scores_table(y_axis, x_axis):
+
+            min_int = -sys.maxsize - 1
+            scores = []
+            for _ in range(len(y_axis)):
+                row = []
+                for _ in range(len(x_axis)):
+                    cell = Cell(min_int, "")
+                    row.append(cell)
+                scores.append(row)
+            scores[0][0].score = 0
+
+            return scores
+    
+        scores_table = init_scores_table(y_axis, x_axis)
+
+        def populate_scoring_table(scores_table, y_axis, x_axis, scoring_matrix):
+
+            min_int = -sys.maxsize - 1
             
-        # Create a custom HTML table with non-unique column and row names
-        table_html = "<table><thead><tr><th></th>"
-        for col in x_axis:
-            table_html += f"<th> {col} </th>"
-        table_html += "</tr></thead><tbody>"
-        for row in y_axis:
-            table_html += f"<tr><td> {row} </td>"
-            for col in x_axis:
-                table_html += "<td></td>"
-            table_html += "</tr>"
-        table_html += "</tbody></table>"
-
-        # Create a placeholder for the table
-        table_placeholder = st.empty()
-
-        # Initialize session state for visibility if it doesn't exist
-        if 'visible' not in st.session_state:
-            st.session_state.visible = True
-
-        curRow = 0
-        curColumn = 0
-        
-        #fill a score table with lowest possible scores
-        min_int = -sys.maxsize - 1
-        scores = []
-        for i in range(len(y_axis)):
-            row = []
-            for j in range(len(x_axis)):
-                cell = Cell(min_int, "x")
-                row.append(cell)
-            scores.append(row)
-        scores[0][0].score = 0
-
-        #iterate through the table scoring
-        for num in range(len(y_axis) * len(x_axis) + 1):
-            # Toggle visibility
-            if st.session_state.visible:
-                table_placeholder.markdown(table_html, unsafe_allow_html=True)
-            else:
-                table_placeholder.empty()
-            
-            # st.session_state.visible = not st.session_state.visible
-            time.sleep(animation_speed)
-
-            # Calculate current row and column positions
-            curRow = num // len(x_axis)
-            curCol = num % len(x_axis)
-
-            # edit table
-            table_html = "<table><thead><tr><th></th>"
-            for col in range(len(x_axis)):
-                if (col == curCol):
-                    table_html += f"<th>({x_axis[col]})</th>"
-                else:
-                    table_html += f"<th> {x_axis[col]} </th>"
-            table_html += "</tr></thead><tbody>"
-        
             for row in range(len(y_axis)):
-                if (row == curRow):
-                    table_html += f"<tr><td>({y_axis[row]})</td>"
-                else:
-                    table_html += f"<tr><td> {y_axis[row]} </td>"
                 for col in range(len(x_axis)):
-                    # If this cell should be filled (we've reached it in our iteration)
-                    if (row < curRow):
-                        table_html += f"<td>{scores[row][col].score}</td>"
-                    elif (row <= curRow and col < curCol):
-                        table_html += f"<td>{scores[row][col].score}</td>"
-                    elif (row == curRow and col == curCol):
-                        topLetter = x_axis[col]
-                        leftLetter = y_axis[row]
 
-                        #pull surronding scores
-                        leftscore = min_int
-                        topscore = min_int
-                        diagonalscore = min_int
-                        if ((col - 1) < 0):
-                            leftscore = 0
-                        else:
-                            leftscore = int(scores[row][col - 1].score)
+                    # Skip the origin (0,0) as it's already set
+                    if row == 0 and col == 0:
+                        continue
+                        
+                    top_nucleotide = x_axis[col]
+                    left_nucleotide = y_axis[row]
 
-                        if ((row - 1) < 0 ):
-                            topscore = 0
-                        else:
-                            topscore = int(scores[row - 1][col].score)
+                    def compute_optimal_score():
+                        
+                        insertion_score = min_int if col - 1 < 0 else int(scores_table[row][col - 1].score)
+                        deletion_score = min_int if row - 1 < 0 else int(scores_table[row - 1][col].score)
+                        subsitution_score = min_int if row - 1 < 0 or col - 1 < 0 else int(scores_table[row - 1][col - 1].score)
 
-                        if (row - 1 < 0 or col - 1 < 0):
-                            diagonalscore = 0
-                        else:
-                            diagonalscore = int(scores[row - 1][col - 1].score)
+                        # Get penalties from scoring matrix
+                        # Handle asymmetrical matrix filled with some 'none'
+                        insertion_penalty = (int(scoring_matrix.at['_', left_nucleotide]) 
+                            if pd.isna(scoring_matrix.at[left_nucleotide, '_']) else int(scoring_matrix.at[left_nucleotide, '_'])
+                        )
 
-                        indelLpen = min_int
-                        indelTpen = min_int
-                        matchLTpen = min_int
-                        #access scoring matrix /////////////////////////////////
-                        # handle assymetrical matrix filled with some 'none'
-                        if pd.isna(scoring_matrix.at[leftLetter, '_']):
-                            indelLpen =  int(scoring_matrix.at['_', leftLetter])
-                        else:
-                            indelLpen =  int(scoring_matrix.at[leftLetter, '_'])
+                        deletion_penalty = (int(scoring_matrix.at[top_nucleotide, '_'])
+                            if pd.isna(scoring_matrix.at['_', top_nucleotide]) else int(scoring_matrix.at['_', top_nucleotide])
+                        )
 
-                        if pd.isna(scoring_matrix.at['_', topLetter]):
-                            indelTpen =  int(scoring_matrix.at[topLetter, '_'])
-                        else:
-                            indelTpen =  int(scoring_matrix.at['_', topLetter])
+                        subsitution_penalty = (int(scoring_matrix.at[top_nucleotide, left_nucleotide])
+                            if pd.isna(scoring_matrix.at[left_nucleotide, top_nucleotide]) else int(scoring_matrix.at[left_nucleotide, top_nucleotide])
+                        )
 
-                        if pd.isna(scoring_matrix.at[leftLetter, topLetter]):
-                            matchLTpen =  int(scoring_matrix.at[topLetter, leftLetter])
+                        # Calculate possible scores
+                        insertion_indel_score = insertion_penalty + deletion_score
+                        deletion_indel_score = deletion_penalty + insertion_score
+                        subsitution_indel_score = subsitution_penalty + subsitution_score
+
+                        best_score = max(insertion_indel_score, deletion_indel_score, subsitution_indel_score)
+
+                        # Direction protocol: diagonal > top > left
+                        if best_score == subsitution_indel_score:
+                            best_direction = "↘"
+                        
+                        elif best_score == insertion_indel_score:
+                            best_direction = "↓"
+
                         else: 
-                            matchLTpen =  int(scoring_matrix.at[leftLetter, topLetter])
+                            best_direction = "→"
                         
-                        indelLscore = int(indelLpen + topscore)
-                        indelTscore = int(indelTpen + leftscore)
-                        diagMatchScore = int(matchLTpen + diagonalscore)
-
-                        bestScore = max(indelLscore, indelTscore, diagMatchScore)
-                        bestDirection = ""
-                        if (bestScore == indelLscore):
-                            bestDirection += "|" #down
-                        if (bestScore == indelTscore):
-                            bestDirection += "-" #left
-                        if (bestScore == diagMatchScore):
-                            bestDirection += "\\" #diagonal
-                        
-                        scores[row][col].score = bestScore
-                        scores[row][col].direction = bestDirection
-                        table_html += f"<td>{leftLetter+topLetter}</td>"
-                    else:
-                        table_html += "<td></td>"
-                table_html += "</tr>"
-            table_html += "</tbody></table>"
-                
+                        return best_score, best_direction
+                    
+                    best_score, best_direction = compute_optimal_score()
+                    
+                    # Update scores table
+                    scores_table[row][col].score = best_score
+                    scores_table[row][col].direction = best_direction
             
-            table_placeholder.markdown(table_html, unsafe_allow_html=True)
-           
-            time.sleep(animation_speed)
-            # show the scores
+        populate_scoring_table(scores_table, y_axis, x_axis, scoring_matrix)
 
-            # TODO fix whitespace in table so it doesn't expand and contract
-            # edit table
-            table_html = "<table><thead><tr><th></th>"
-            for col in range(len(x_axis)):
-                if (col == curCol):
-                    table_html += f"<th>({x_axis[col]})</th>"
-                else:
-                    table_html += f"<th> {x_axis[col]} </th>"
-            table_html += "</tr></thead><tbody>"
-        
-            for row in range(len(y_axis)):
-                if (row == curRow):
-                    table_html += f"<tr><td>({y_axis[row]})</td>"
-                else:
-                    table_html += f"<tr><td> {y_axis[row]} </td>"
-                for col in range(len(x_axis)):
-                    # If this cell should be filled (we've reached it in our iteration)
-                    if row < curRow or (row == curRow and col <= curCol):
-                        # todo: display fancy direction
-                        table_html += f"<td>{scores[row][col].score}{scores[row][col].direction}</td>"
-                    else:
-                        table_html += "<td></td>"
-                table_html += "</tr>"
-            table_html += "</tbody></table>"
+        return scores_table
 
-            table_placeholder.markdown(table_html, unsafe_allow_html=True)
-        
-        self.findBestPath(scores, x_axis, y_axis)
-
-        return scores
-
-    def showBestPath(self, pathCoordinates: List[tuple], scores, x_axis, y_axis):
+    def _show_best_path_table(self, path_coordinates: List[tuple], scores, x_axis, y_axis):
        
         table_html = "<table><thead><tr><th></th>"
 
@@ -239,7 +145,7 @@ class SingleAlignment:
             for col_idx in range(len(x_axis)):
                 score = scores[row_idx][col_idx].score
                 inPath = False
-                for coordinates in pathCoordinates:
+                for coordinates in path_coordinates:
                     temp = [row_idx, col_idx]
                     if temp == coordinates:
                         inPath = True
@@ -252,65 +158,33 @@ class SingleAlignment:
         
         # Display the table in Streamlit
         st.markdown(table_html, unsafe_allow_html=True)
-        
-    def getAlignment(self, path, x_axis, y_axis) -> str:
-        x_str = x_axis[1:]
-        y_str = y_axis[1:]
-        source = "" #y_axis
-        destination = "" #x_axis
-        col = 0
-        row = 0
-        for direction in path:
-            
-            if direction == "|":
-                source += y_str[row]
-                destination += "_"
-                row += 1
 
-            if direction == "-":
-               
-                source += "_"
-                destination += x_str[col]
-                col += 1
-            if direction == "\\":
-                source += y_str[row]
-                destination += x_str[col]
-                row += 1
-                col += 1
-        
-        st.write("Alignment: ")
-        st.write(source)
-        st.write(destination)
-
-        alignment = source + " \n " + destination
-
-        return alignment
-
-
-    def findBestPath(self, scores, x_axis, y_axis) -> str:
+    def _find_best_path(self, scores, x_axis, y_axis):
         
         isStart = False
         row = len(scores) - 1
         col = len(scores[0]) - 1
         min_int = -sys.maxsize - 1
         path = ""
-        pathCoordinates = [[0,0]]
+        path_coordinates = [[0,0]]
         totalScore = scores[row][col].score
         
         while(isStart == False):
+
             moveOptions = scores[row][col].direction
             leftScore = min_int
             diagScore = min_int
             topScore = min_int
-            if "-" in moveOptions:
+
+            if "→" in moveOptions:
                 if col - 1 < 0:
                     leftScore = min_int
                 leftScore = scores[row][col - 1].score
-            if "\\" in moveOptions:
+            if "↘" in moveOptions:
                 if row - 1 < 0 and col - 1 < 0:
                     diagScore = min_int
                 diagScore = scores[row - 1][col - 1].score
-            if "|" in moveOptions:
+            if "↓" in moveOptions:
                 if col - 1 < 0:
                     topScore = min_int
                 topScore = scores[row - 1][col].score
@@ -318,16 +192,18 @@ class SingleAlignment:
             bestScore = max(leftScore, diagScore, topScore)
 
             if (row == 0 and col > 0):
-                pathCoordinates.append([row, col])
-                path += "-"
+                path_coordinates.append([row, col])
+                path += "→"
                 col = col - 1
+                
             elif (col == 0 and row > 0):
-                pathCoordinates.append([row, col])
-                path += "|"
+                path_coordinates.append([row, col])
+                path += "↓"
                 row = row - 1
+                
             else:
                 if bestScore == diagScore:
-                    pathCoordinates.append([row, col])
+                    path_coordinates.append([row, col])
                     row = row-1
                     if (row < 0):
                         row = 0
@@ -335,34 +211,132 @@ class SingleAlignment:
                     if (col < 0):
                         col = 0
                    
-                    path += "\\" + " " 
+                    path += "↘"
+                     
                 elif bestScore == topScore:
-                    pathCoordinates.append([row, col])
+                    path_coordinates.append([row, col])
                     row = row - 1
                     if (row < 0):
                         row = 0
                     
-                    path += "|" + " "
+                    path += "↓"
+                    
                 elif bestScore == leftScore:
-                    pathCoordinates.append([row, col])
+                    path_coordinates.append([row, col])
                     col = col - 1
                     if (col < 0):
                         col = 0
                     
-                    path += "-" + " "
+                    path += "→"
             
             if row == 0 and col == 0:
                 isStart = True
                 break
 
         path = path[::-1]
-        
-        self.showBestPath(pathCoordinates, scores, x_axis, y_axis)
-        alignment = self.getAlignment(path, x_axis, y_axis)
-        st.write("Total Score:")
-        st.write(str(totalScore))
-        return path
 
+        return path, path_coordinates, totalScore
+
+    def _generate_table_html(self, scores, x_axis, y_axis, curRow, curCol, show_scores=False):
+        """Generates HTML for the table at a specific point in the animation."""
+        # Create table header
+        table_html = "<table><thead><tr><th></th>"
+        for col in range(len(x_axis)):
+            if col == curCol:
+                table_html += f"<th>({x_axis[col]})</th>"
+            else:
+                table_html += f"<th> {x_axis[col]} </th>"
+        table_html += "</tr></thead><tbody>"
+        
+        # Create table rows
+        for row in range(len(y_axis)):
+            if row == curRow:
+                table_html += f"<tr><td>({y_axis[row]})</td>"
+            else:
+                table_html += f"<tr><td> {y_axis[row]} </td>"
+                
+            for col in range(len(x_axis)):
+                if row < curRow or (row == curRow and col < curCol):
+                    # Already processed cells
+                    table_html += f"<td>{scores[row][col].score}{scores[row][col].direction}</td>"
+                elif row == curRow and col == curCol:
+                    # Current cell being processed
+                    if show_scores:
+                        table_html += f"<td>{scores[row][col].score}{scores[row][col].direction}</td>"
+                    else:
+                        # Show what we're comparing
+                        table_html += f"<td>{y_axis[row]}{x_axis[col]}</td>"
+                else:
+                    # Not yet processed
+                    table_html += "<td></td>"
+            table_html += "</tr>"
+        table_html += "</tbody></table>"
+        
+        return table_html
+
+    def _animate_scoring_process(self, scores, x_axis, y_axis, animation_speed):
+
+        # Create a placeholder for the table
+        table_placeholder = st.empty()
+    
+        # Initialize session state for visibility if it doesn't exist
+        if 'visible' not in st.session_state:
+            st.session_state.visible = True
+        
+        total_cells = len(y_axis) * len(x_axis)
+        
+        for num in range(total_cells + 1):
+            # Calculate current row and column positions
+            curRow = num // len(x_axis)
+            curCol = num % len(x_axis)
+            
+            # Generate and display table showing current progress
+            table_html = self._generate_table_html(scores, x_axis, y_axis, curRow, curCol)
+            table_placeholder.markdown(table_html, unsafe_allow_html=True)
+            
+            time.sleep(animation_speed)
+            
+            # For the last cell, also show its score after calculation
+            if num < total_cells:
+                table_html = self._generate_table_html(scores, x_axis, y_axis, curRow, curCol, show_scores=True)
+                table_placeholder.markdown(table_html, unsafe_allow_html=True)
+                time.sleep(animation_speed)
+
+    def _construct_alignments(self, path: str, x_axis: list, y_axis: list) -> str:
+    
+        final_S1 = []
+        final_S2 = []
+
+        # x_axis is S1, y_axis is S2
+        # Remove the '_' character from the axis's 
+        x_axis, y_axis = x_axis[1:], y_axis[1:]
+
+        for direction in path:
+
+            S1_char = ""
+            S2_char = ""
+
+            match direction:
+                case "↘":
+                    S1_char = x_axis.pop(0)
+                    S2_char = y_axis.pop(0)
+                
+                case "↓":
+                    S1_char = "_"
+                    S2_char = y_axis.pop(0)
+
+                case "→":
+                    S1_char = x_axis.pop(0)
+                    S2_char = "_"
+                
+            final_S1.append(S1_char)
+            final_S2.append(S2_char)
+
+        return "".join(final_S1), "".join(final_S2)
+
+    def _construct_lcs(self, alignments: List[str]) -> str:
+        return "AA"
+    
     def execute_alignment(self, input_txt: list, scoring_matrix, animation_speed) -> str:
         """
         Purpose
@@ -379,9 +353,22 @@ class SingleAlignment:
         str
             Result of the alignment.
         """
+        
+        y_axis = ["_"] + list(input_txt[0])
+        x_axis = ["_"] + list(input_txt[1])
        
-        scores = self.fill_table_w_scores(input_txt, scoring_matrix, animation_speed)
-    
-        #todo: display alignment
-        #todo: display score - only return the score, display is handled elsewhere
-        return "\n"
+        scores = self._fill_table_w_scores(y_axis, x_axis, scoring_matrix)
+
+        self._animate_scoring_process(scores, x_axis, y_axis, animation_speed)
+
+        path, path_coordinates, final_score = self._find_best_path(scores, x_axis, y_axis)
+
+        self._show_best_path_table(path_coordinates, scores, x_axis, y_axis)
+
+        alignments = self._construct_alignments(path, x_axis, y_axis)
+
+        st.write(alignments[0])
+
+        lcs = self._construct_lcs(alignments)
+
+        return (alignments, lcs, final_score)
