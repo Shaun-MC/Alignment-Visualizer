@@ -68,3 +68,13 @@ class Options:
 
         with alignment_location:
             self.set_alignment_location(st.radio("Alignment Location: ", ["Local", "Global"]))
+
+        st.markdown(
+            """
+                <style>
+                    div[class*="stRadio"] > label > div[data-testid="stMarkdownContainer"] > p {
+                        font-size: 20px;
+                    }
+                </style>
+            """, 
+        unsafe_allow_html=True)

@@ -49,6 +49,16 @@ class SingleAlignment:
         with s2_input:
             self._set_second_sequence(st.text_area(label="S2: ", value="", height=self.max_height_pixels, max_chars=self.max_char_input))
 
+        st.markdown(
+                """
+                    <style>
+                        div[class*="stTextArea"] > label > div[data-testid="stMarkdownContainer"] > p {
+                            font-size: 20px;
+                        }
+                    </style>
+                """, 
+            unsafe_allow_html=True)
+
     def _fill_table_w_scores(self, y_axis: list, x_axis: list, scoring_matrix) -> list[list[Cell]]:
 
         def init_scores_table(y_axis, x_axis):
@@ -131,7 +141,20 @@ class SingleAlignment:
         return scores_table
 
     def _show_best_path_table(self, path_coordinates: List[tuple], scores, x_axis, y_axis):
-       
+
+        st.markdown(f"<pre>Best Path Table </pre>", unsafe_allow_html=True)
+
+        st.markdown(
+            """
+                <style>
+                    div[class*="stMarkdown"] > div > div[data-testid="stMarkdownPre"] {
+                        font-size: 20x;
+                    }
+                </style>
+            """, 
+            unsafe_allow_html=True
+        )
+        
         table_html = "<table><thead><tr><th></th>"
 
         # write the labels at the top of the table
@@ -276,6 +299,19 @@ class SingleAlignment:
 
     def _animate_scoring_process(self, scores, x_axis, y_axis, animation_speed):
 
+        st.markdown(f"<pre>Scoring Table </pre>", unsafe_allow_html=True)
+
+        st.markdown(
+            """
+                <style>
+                    div[class*="stMarkdown"] > div > div[data-testid="stMarkdownPre"] {
+                        font-size: 20px;
+                    }
+                </style>
+            """, 
+            unsafe_allow_html=True
+        )
+        
         # Create a placeholder for the table
         table_placeholder = st.empty()
     
@@ -366,8 +402,6 @@ class SingleAlignment:
         self._show_best_path_table(path_coordinates, scores, x_axis, y_axis)
 
         alignments = self._construct_alignments(path, x_axis, y_axis)
-
-        st.write(alignments[0])
 
         lcs = self._construct_lcs(alignments)
 

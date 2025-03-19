@@ -73,17 +73,36 @@ class Alignment:
         def execute_alignment(sequence_input):
             
             animation_speed = st.selectbox("Animation Speed (Seconds)", options=[2, 1, 0.5, 0])
-            # Start executing alginemnt 
-            if st.button("Run Alignment"):
 
-                # TODO When this modules is updated, the alignment algorithm resets - figure how to keep the state of the alignment algorithm
-                # Should probably in the execute_alignment function to make that happen 
-                pause = st.button("Pause")
+            st.markdown(
+                """
+                    <style>
+                        div[class*="stSelectbox"] > label > div[data-testid="stMarkdownContainer"] > p {
+                            font-size: 20px;
+                        }
+                    </style>
+                """, 
+            unsafe_allow_html=True)
 
-                return self.alignment_type.execute_alignment(sequence_input, self.scoring_matrix.scoring_matrix, animation_speed)
+            if 'alignment_running' not in st.session_state:
+                st.session_state.alignment_running = False
 
-            else:
-                return None, None, None
+            running_alignment, pause_algorithm, blank = st.columns(3)
+
+            with running_alignment:
+                if st.button("Run Alignment"):
+                    st.session_state.alignment_running = True
+
+                    # TODO When this modules is updated, the alignment algorithm resets - figure how to keep the state of the alignment algorithm
+                    # Should probably in the execute_alignment function to make that happen 
+                    with pause_algorithm:
+                        if st.button("Pause"):
+                            st.session_state.alignment_running = False
+
+                    return self.alignment_type.execute_alignment(sequence_input, self.scoring_matrix.scoring_matrix, animation_speed)
+
+                else:
+                    return (None, None, None)
             
         formatted_alignments, lcs, score = execute_alignment(sequence_input)
 
@@ -93,14 +112,26 @@ class Alignment:
                 return
             
             else:
+                
                 st.header("Alignment Output")
 
-                st.write("S1: ", formatted_alignments[0])
-                st.write("S2: ", formatted_alignments[1])
+                st.markdown(f"<pre>S1: {formatted_alignments[0]}</pre>", unsafe_allow_html=True)
+                st.markdown(f"<pre>S2: {formatted_alignments[1]}</pre>", unsafe_allow_html=True)
 
-                st.write("Score: ", str(score))
+                st.markdown(f"<pre>Score: {str(score)}</pre>", unsafe_allow_html=True)
 
                 st.header("Longest Common Subsequence")
-                st.write(lcs)
+                st.markdown(f"<pre>LCS: {lcs}</pre>", unsafe_allow_html=True)
+
+                st.markdown(
+                    """
+                        <style>
+                            div[class*="stMarkdown"] > div > div[data-testid="stMarkdownPre"] {
+                                font-size: 20px;
+                            }
+                        </style>
+                    """, 
+                    unsafe_allow_html=True
+                )
 
         display_alignments(formatted_alignments, lcs, score)
