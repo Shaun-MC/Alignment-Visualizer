@@ -15,3 +15,7 @@ class DefaultDNAScoringMatrix:
         }
         
         self.scoring_matrix = pd.DataFrame(data, index=labels)
+
+    # Preset matrices don't need to be validated because it's not displayed to the user
+    def validate_scoring_matrix(self) -> None:
+        return

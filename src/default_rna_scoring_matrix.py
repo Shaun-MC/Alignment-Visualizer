@@ -1,6 +1,4 @@
-import streamlit as st
 import pandas as pd
-import numpy as np
 
 class DefaultRNAScoringMatrix:
     def __init__(self):
@@ -18,3 +16,7 @@ class DefaultRNAScoringMatrix:
 
         # Display the matrix
         self.scoring_matrix = pd.DataFrame(data, index=labels)
+
+    # Preset matrices don't need to be validated because it's not displayed to the user
+    def validate_scoring_matrix(self) -> None:
+        return
