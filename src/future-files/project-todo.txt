@@ -1,25 +1,31 @@
 Bug Report
 
-FINISH BY TONIGHT
-
-TODO: Scoring Matrix - WIP
-    - Row and column titles shouldn't be able to be edited - WIP
-    - Initialize bottom triangle to none or have 0 values and unable to edit them - WIP
-
 TODO: Configure the Single Alignment algorithm for global / local - WIP
+
+TODO: Create a utils class for repeated st.markdown styling calls
+
+Todo List
 
 TODO: Figure out Multiple Alignment Algorithm - WIP
 
-TODO: Investigate weird spacing w/ table labels - WIP
+TODO: Add Gap penalties
 
-Todo List
+TODO: Make the pause button work
+
+TODO: Configure the Single Alignment algorithm for global / local - WIP
+
+TODO: Scoring Matrix - DAMN NEAR IMPOSSIBLE TO IMPLEMENT ACCORDING TO OUR WANTS
+    - Row and column titles shouldn't be able to be edited - WIP
+    - Initialize bottom triangle to none or have 0 values and unable to edit them - WIP
+
+TODO: Investigate weird spacing w/ table labels - WIP
 
 TODO: Add Input Testing - WIP
     - Use pytest
     - Write test cases in test_multiple_alignment_tests.py & test_single_alignment_tests.py
     - Until sequencing algorithm is implemented, can only test negative path cases, searching for bugs/errors
 
-TODO: Figure out Header & footer
+TODO: Figure out Header & footer - DONE ENOUGH
     - See if the footer can be permantely placed at the bottom, currently removed when alignment is executed - UNSURE IF POSSIBLE GIVEN STREAMLIT EXECUTION STRUCTURE
 
 TODO: Be able to visualize the text for multiple alignment type file input - DONE
