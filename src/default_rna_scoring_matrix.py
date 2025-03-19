@@ -3,11 +3,8 @@ import pandas as pd
 import numpy as np
 
 class DefaultRNAScoringMatrix:
-
     def __init__(self):
-        self.scoring_matrix = None
-        self.total_characters = 5
-
+        
         # Initialize the matrix
         labels = ["_", "A", "G", "C", "U"]
 

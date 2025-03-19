@@ -12,6 +12,7 @@ class DNAScoringMatrix:
         # Initialize the matrix
         st.header("Custom Scoring Matrix")
         labels = ["_", "A", "G", "C", "T"]
+
         # Define the data with varying column heights
         data = {
             "_": [0, np.nan, np.nan, np.nan, np.nan],
