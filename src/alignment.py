@@ -25,17 +25,23 @@ class Alignment:
             def retrieve_options():
                 # Visual options still exist after the Options class goes out of scope
                 options = Options()
-                return (options.get_alignment_type(),  options.get_sequence_type(), options.get_using_scoring_matrix(), options.get_input_format())    
+                return (
+                    options.get_alignment_type(),  
+                    options.get_sequence_type(), 
+                    options.get_using_scoring_matrix(), 
+                    options.get_input_format(),
+                    options.get_alignment_location()
+                )    
 
             # Get all the options from the user
-            alignment_type_option, sequence_type_option, using_scoring_matrix_option, input_format_option = retrieve_options()
+            alignment_type_option, sequence_type_option, using_scoring_matrix_option, input_format_option, alignment_location = retrieve_options()
 
             try:
                 # Create the objects based on the options
                 # Input Format doesn't get it's own object as it only matters for multiple alignment
                 self.scoring_matrix = ScoringMatrixFactory.create_scoring_matrix(using_scoring_matrix_option, sequence_type_option)
                 self.sequence_type = SequenceTypeFactory.create_sequence_type(sequence_type_option)
-                self.alignment_type = AlignmentTypeFactory.create_alignment_type(alignment_type_option, input_format_option)
+                self.alignment_type = AlignmentTypeFactory.create_alignment_type(alignment_type_option, input_format_option, alignment_location)
 
             except ValueError as e:
 
