@@ -15,10 +15,10 @@ class EditSymbols(Enum):
     DELETION = "→"
     RESET = "⋅"
 
-class GlobalAlignment:
+class LocalAlignment:
     def __init__(self):
-        self.min_init = -sys.maxsize - 1
-        self.symbols = EditSymbols()
+        self.min_int = -sys.maxsize - 1
+        self.symbols = EditSymbols
 
     def _init_scores_table(self, x_axis, y_axis):
 
@@ -66,6 +66,7 @@ class GlobalAlignment:
         # Direction protocol priority: diagonal > top > left
         if best_score <= 0:
             best_direction = self.symbols.RESET.value
+            best_score = 0
 
         elif best_score == subsitution_indel_score:
             best_direction = self.symbols.SUBSTITUTION.value
@@ -226,5 +227,94 @@ class GlobalAlignment:
                 path_coordinates.append((row, col))
 
         return "".join(reversed(path)), path_coordinates, total_score
+
+    def _generate_best_path_table_html(self, scores, x_axis, y_axis, path_set):
+    
+        table_html = "<table><thead><tr><th></th>"
+
+        # Add column headers (x_axis)
+        table_html += "".join(f"<th> {col} </th>" for col in x_axis)
+        table_html += "</tr></thead><tbody>"
+
+        # Add row headers (y_axis) and scores
+        for row, row_label in enumerate(y_axis):
+            table_html += f"<tr><td> {row_label} </td>"
+
+            for col in range(len(x_axis)):
+                score = scores[row][col].score
+
+                if (row, col) in path_set:
+                    table_html += f"<td>({score})</td>"  # Highlight path cells
+                else:
+                    table_html += f"<td>{score}</td>"
+            table_html += "</tr>"
+
+        table_html += "</tbody></table>"
+
+        return table_html
+
+    def _show_best_path_table(self, path_coordinates: list[tuple], scores, x_axis, y_axis):
+        st.markdown("<pre>Best Path Table</pre>", unsafe_allow_html=True)
+
+        st.markdown(
+            """
+                <style>
+                    div[class*="stMarkdown"] > div > div[data-testid="stMarkdownPre"] {
+                        font-size: 20px;
+                    }
+                </style>
+            """, 
+            unsafe_allow_html=True
+        )
+
+        # Allows for a quicker look up
+        path_set = set(map(tuple, path_coordinates))
+
+        table_html = self._generate_best_path_table_html(scores, x_axis, y_axis, path_set)
+
+        st.markdown(table_html, unsafe_allow_html=True)
+
+    def _construct_alignments(self, path: str, x_axis: list, y_axis: list) -> str:
+    
+        final_S1, final_S2 = [], []
+
+        # Converting the lists to iterators allows for efficiently fetched elements
+        x_iter, y_iter = iter(x_axis[1:]), iter(y_axis[1:])  
+
+        for direction in path:
+            if direction == self.symbols.SUBSTITUTION.value:  # Substitution (keep both characters)
+                final_S1.append(next(x_iter))
+                final_S2.append(next(y_iter))
+            elif direction == self.symbols.INSERTION.value:  # Insertion (gap in S1)
+                final_S1.append("_")
+                final_S2.append(next(y_iter))
+            elif direction == self.symbols.DELETION.value:  # Deletion (gap in S2)
+                final_S1.append(next(x_iter))
+                final_S2.append("_")
+
+        return "".join(final_S1), "".join(final_S2)
+
+    def _construct_lcs(self, alignments: tuple[str, str]) -> str:
+
+        # Super pythonic way of doing it but it works
+        S1, S2 = alignments
+        return "".join(c1 for c1, c2 in zip(S1, S2) if c1 == c2)
+
+    def execute_alignment(self, x_axis, y_axis, scoring_matrix, animation_speed):
+
+        # Alot of concerns in this function 
+        # Should be broken down into smaller functions for clarity
+        # Ah well
+        scores_table = self._compute_scores(x_axis, y_axis, scoring_matrix)
+
+        self._animate_scoring_process(scores_table, x_axis, y_axis, animation_speed)
+
+        path, path_coordinates, total_score = self._find_best_path(scores_table)
+
+        self._show_best_path_table(path_coordinates, scores_table, x_axis, y_axis)
+
+        alignments = self._construct_alignments(path, x_axis, y_axis)
+
+        return alignments, self._construct_lcs(alignments), total_score
         
         

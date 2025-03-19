@@ -16,8 +16,8 @@ class EditSymbols(Enum):
 
 class GlobalAlignment:
     def __init__(self):
-        self.min_init = -sys.maxsize - 1
-        self.symbols = EditSymbols()
+        self.min_int = -sys.maxsize - 1
+        self.symbols = EditSymbols
 
     def _init_scores_table(self, x_axis, y_axis):
 
@@ -40,16 +40,16 @@ class GlobalAlignment:
 
         # Get penalties from scoring matrix
         # Handle asymmetrical matrix filled with some 'none'
-        insertion_penalty = (int(scoring_matrix.at['_', left_nucleotide]) 
-            if pd.isna(scoring_matrix.at[left_nucleotide, '_']) else int(scoring_matrix.at[left_nucleotide, '_'])
+        insertion_penalty = (int(scoring_matrix.at[left_nucleotide, '_']) 
+            if pd.isna(scoring_matrix.at['_', left_nucleotide]) else int(scoring_matrix.at['_', left_nucleotide])
         )
 
-        deletion_penalty = (int(scoring_matrix.at[top_nucleotide, '_'])
-            if pd.isna(scoring_matrix.at['_', top_nucleotide]) else int(scoring_matrix.at['_', top_nucleotide])
+        deletion_penalty = (int(scoring_matrix.at['_', top_nucleotide])
+            if pd.isna(scoring_matrix.at[top_nucleotide, '_',]) else int(scoring_matrix.at[top_nucleotide, '_'])
         )
 
-        subsitution_penalty = (int(scoring_matrix.at[top_nucleotide, left_nucleotide])
-            if pd.isna(scoring_matrix.at[left_nucleotide, top_nucleotide]) else int(scoring_matrix.at[left_nucleotide, top_nucleotide])
+        subsitution_penalty = (int(scoring_matrix.at[left_nucleotide, top_nucleotide])
+            if pd.isna(scoring_matrix.at[top_nucleotide, left_nucleotide]) else int(scoring_matrix.at[top_nucleotide, left_nucleotide])
         )
 
         # Calculate possible scores
@@ -273,14 +273,14 @@ class GlobalAlignment:
         x_iter, y_iter = iter(x_axis[1:]), iter(y_axis[1:])  
 
         for direction in path:
-            if direction == self.symbols.SUBSTITUTION:  # Substitution (keep both characters)
-                final_S1.append(next(x_iter, "_"))
-                final_S2.append(next(y_iter, "_"))
-            elif direction == self.symbols.INSERTION:  # Insertion (gap in S1)
+            if direction == self.symbols.SUBSTITUTION.value:  # Substitution (keep both characters)
+                final_S1.append(next(x_iter))
+                final_S2.append(next(y_iter))
+            elif direction == self.symbols.INSERTION.value:  # Insertion (gap in S1)
                 final_S1.append("_")
-                final_S2.append(next(y_iter, "_"))
-            elif direction == self.symbols.DELETION:  # Deletion (gap in S2)
-                final_S1.append(next(x_iter, "_"))
+                final_S2.append(next(y_iter))
+            elif direction == self.symbols.DELETION.value:  # Deletion (gap in S2)
+                final_S1.append(next(x_iter))
                 final_S2.append("_")
 
         return "".join(final_S1), "".join(final_S2)
@@ -291,19 +291,19 @@ class GlobalAlignment:
         S1, S2 = alignments
         return "".join(c1 for c1, c2 in zip(S1, S2) if c1 == c2)
 
-def execute_alignment(self, x_axis, y_axis, scoring_matrix, animation_speed):
+    def execute_alignment(self, x_axis, y_axis, scoring_matrix, animation_speed):
 
-    # Alot of concerns in this function 
-    # Should be broken down into smaller functions for clarity
-    # Ah well
-    scores_table = self._compute_scores(x_axis, y_axis, scoring_matrix)
+        # Alot of concerns in this function 
+        # Should be broken down into smaller functions for clarity
+        # Ah well
+        scores_table = self._compute_scores(x_axis, y_axis, scoring_matrix)
 
-    self._animate_scoring_process(scores_table, x_axis, y_axis, animation_speed)
+        self._animate_scoring_process(scores_table, x_axis, y_axis, animation_speed)
 
-    path, path_coordinates, total_score = self._find_best_path(scores_table)
+        path, path_coordinates, total_score = self._find_best_path(scores_table)
 
-    self._show_best_path_table(path_coordinates, scores_table, x_axis, y_axis)
+        self._show_best_path_table(path_coordinates, scores_table, x_axis, y_axis)
 
-    alignments = self._construct_alignments(path, x_axis, y_axis)
+        alignments = self._construct_alignments(path, x_axis, y_axis)
 
-    return alignments, self._construct_lcs(alignments), total_score
+        return alignments, self._construct_lcs(alignments), total_score

@@ -12,15 +12,17 @@ class CustomRNAScoringMatrix:
 
         # Initialize the matrix
         st.header("Custom Scoring Matrix")
-        labels = ["_", "A", "G", "C", "U"]
+        labels = ["_", "A", "C", "G", "U"]
 
         data = {
             "_": [0, np.nan, np.nan, np.nan, np.nan],
             "A": [0, 0, np.nan, np.nan, np.nan],
-            "G": [0, 0, 0, np.nan, np.nan],
-            "C": [0, 0, 0, 0, np.nan],
+            "C": [0, 0, 0, np.nan, np.nan],
+            "G": [0, 0, 0, 0, np.nan],
             "U": [0, 0, 0, 0, 0]
         }
+
+        self.original_scoring_matrix = pd.DataFrame(data, index=labels)
 
         # Idk about keeping this here - apart of my final attempt to reset the table
         if "table_uuid" not in ss:

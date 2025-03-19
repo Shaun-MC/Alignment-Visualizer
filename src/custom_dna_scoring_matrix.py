@@ -15,8 +15,8 @@ class CustomDNAScoringMatrix:
         data = {
             "_": [0, np.nan, np.nan, np.nan, np.nan],
             "A": [0, 0, np.nan, np.nan, np.nan],
-            "G": [0, 0, 0, np.nan, np.nan],
-            "C": [0, 0, 0, 0, np.nan],
+            "C": [0, 0, 0, np.nan, np.nan],
+            "G": [0, 0, 0, 0, np.nan],
             "T": [0, 0, 0, 0, 0]
         }
 
