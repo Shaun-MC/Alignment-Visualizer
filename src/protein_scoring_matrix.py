@@ -5,8 +5,18 @@ import numpy as np
 class ProteinScoringMatrix:
     def __init__(self):
 
-        st.header("Available Protein Scoring Matrices")
-        st.radio("Scoring Matrix: ", ["BLOSUM62"])
+        st.radio("Available Protein Scoring Matrices: ", ["BLOSUM62"])
+
+        st.markdown(
+            """
+                <style>
+                    div[class*="stRadio"] > label > div[data-testid="stMarkdownContainer"] > p {
+                        font-size: 20px;
+                    }
+                </style>
+            """, 
+            unsafe_allow_html=True
+        )
 
         # Actual values are unverfified, I don't feel like doing it
         @st.cache_data(persist="disk")
@@ -39,4 +49,7 @@ class ProteinScoringMatrix:
         data = retrieve_blosum62()
         
         self.scoring_matrix = pd.DataFrame(data, index=labels)
-        
+
+    # Preset matrices don't need to be validated because it's not displayed to the user
+    def validate_scoring_matrix(self) -> bool:
+        return True

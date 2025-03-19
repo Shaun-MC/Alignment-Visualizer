@@ -1,5 +1,5 @@
-from dna_scoring_matrix import DNAScoringMatrix
-from rna_scoring_matrix import RNAScoringMatrix
+from custom_dna_scoring_matrix import CustomDNAScoringMatrix
+from custom_rna_scoring_matrix import CustomRNAScoringMatrix
 from protein_scoring_matrix import ProteinScoringMatrix
 from default_dna_scoring_matrix import DefaultDNAScoringMatrix
 from default_rna_scoring_matrix import DefaultRNAScoringMatrix
@@ -22,9 +22,9 @@ class ScoringMatrixFactory:
         
         match sequence_type_option:
             case "DNA":
-                return DNAScoringMatrix()
+                return CustomDNAScoringMatrix()
             case "RNA":
-                return RNAScoringMatrix()
+                return CustomRNAScoringMatrix()
             case "Protein":
                 return ProteinScoringMatrix()
             case _:
