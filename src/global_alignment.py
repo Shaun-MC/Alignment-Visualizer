@@ -134,7 +134,7 @@ class GlobalAlignment:
         
         return table_html
 
-    def _animate_scoring_process(self, scores, y_axis, x_axis, animation_speed):
+    def _animate_scoring_process(self, scores, x_axis, y_axis, animation_speed):
 
         st.markdown(f"<pre>Scoring Table </pre>", unsafe_allow_html=True)
 
