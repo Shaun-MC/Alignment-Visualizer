@@ -1,10 +1,10 @@
 Bug Report
 
+Todo List
+
 TODO: Configure the Single Alignment algorithm for global / local - WIP
 
 TODO: Create a utils class for repeated st.markdown styling calls
-
-Todo List
 
 TODO: Figure out Multiple Alignment Algorithm - WIP
 
