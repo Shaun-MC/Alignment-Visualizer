@@ -1,15 +1,10 @@
+class Sequence:
 
-
-class DNA:
-    def __init__(self):
-
-        def retrieve_valid_nucleotides():
-            return {'A': None, 'C': None, 'G': None, 'T': None}
-
-        self.valid_nucleotides = retrieve_valid_nucleotides()
+    def __init__(self, valid_characters: set):
+        self.valid_characters = valid_characters
         self.validated_sequences = list()
 
-    def get_validated_sequences(self):
+    def get_validated_sequences(self) -> list[str]:
         return self.validated_sequences
 
     def validate_encoding(self, sequences: list[str]) -> None:
@@ -23,10 +18,9 @@ class DNA:
 
             sequences[i] = upper_sequence
 
-            for nucleotide in upper_sequence:
+            for character in upper_sequence:
 
-                if nucleotide not in self.valid_nucleotides:
-
+                if character not in self.valid_characters:
                     self.validated_sequences = list()
                     return
 
