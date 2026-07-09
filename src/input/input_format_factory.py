@@ -1,5 +1,6 @@
-from fasta_input import FASTAInput
-from plain_text_input import PlainTextInput
+from .fasta_input import FASTAInput
+from .plain_text_input import PlainTextInput
+
 
 class InputFormatFactory:
     @staticmethod

@@ -1,6 +1,6 @@
-from alignment import Alignment
-from header import Header
-from footer import Footer
+from alignment.core import Alignment
+from ui.header import Header
+from ui.footer import Footer
 
 if __name__ == "__main__":
 

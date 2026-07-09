@@ -1,6 +1,7 @@
-from dna_sequence_type import DNA
-from rna_sequence_type import RNA
-from protein_sequence_type import Protein
+from .dna_sequence_type import DNA
+from .rna_sequence_type import RNA
+from .protein_sequence_type import Protein
+
 
 class SequenceTypeFactory:
     @staticmethod

@@ -1,5 +1,6 @@
-from global_alignment import GlobalAlignment
-from local_alignment import LocalAlignment
+from .global_alignment import GlobalAlignment
+from .local_alignment import LocalAlignment
+
 
 class AlignmentAlgorithmFactory:
     @staticmethod

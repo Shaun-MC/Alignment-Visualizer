@@ -1,7 +1,7 @@
-from options import Options
-from scoring_matrix_factory import ScoringMatrixFactory
-from alignment_type_factory import AlignmentTypeFactory
-from sequence_type_factory import SequenceTypeFactory
+from ui.options import Options
+from scoring.scoring_matrix_factory import ScoringMatrixFactory
+from .alignment_type_factory import AlignmentTypeFactory
+from sequence.sequence_type_factory import SequenceTypeFactory
 import streamlit as st
 
 class Alignment:

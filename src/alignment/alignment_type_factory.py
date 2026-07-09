@@ -1,5 +1,5 @@
-from single_alignment import SingleAlignment
-from multiple_alignment import MultipleAlignment
+from .single_alignment import SingleAlignment
+from .multiple_alignment import MultipleAlignment
 
 class AlignmentTypeFactory:
     @staticmethod

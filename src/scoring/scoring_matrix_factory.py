@@ -1,9 +1,10 @@
-from custom_dna_scoring_matrix import CustomDNAScoringMatrix
-from custom_rna_scoring_matrix import CustomRNAScoringMatrix
-from protein_scoring_matrix import ProteinScoringMatrix
-from default_dna_scoring_matrix import DefaultDNAScoringMatrix
-from default_rna_scoring_matrix import DefaultRNAScoringMatrix
-from default_protein_scoring_matrix import DefaultProteinScoringMatrix
+from .custom_dna_scoring_matrix import CustomDNAScoringMatrix
+from .custom_rna_scoring_matrix import CustomRNAScoringMatrix
+from .protein_scoring_matrix import ProteinScoringMatrix
+from .default_dna_scoring_matrix import DefaultDNAScoringMatrix
+from .default_rna_scoring_matrix import DefaultRNAScoringMatrix
+from .default_protein_scoring_matrix import DefaultProteinScoringMatrix
+
 
 class ScoringMatrixFactory:
     @staticmethod
@@ -19,7 +20,7 @@ class ScoringMatrixFactory:
                     return DefaultProteinScoringMatrix()
                 case _:
                     raise ValueError("Invalid sequence type option")
-        
+
         match sequence_type_option:
             case "DNA":
                 return CustomDNAScoringMatrix()
