@@ -2,6 +2,11 @@
   "name": "Python 3",
   // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
   "image": "mcr.microsoft.com/devcontainers/python:1-3.11-bullseye",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    }
+  },
   "customizations": {
     "codespaces": {
       "openFiles": [
@@ -10,24 +15,39 @@
       ]
     },
     "vscode": {
-      "settings": {},
+      "settings": {
+        "python.defaultInterpreterPath": "${containerWorkspaceFolder}/api/.venv/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false,
+        "python.testing.pytestArgs": ["api"]
+      },
       "extensions": [
         "ms-python.python",
         "ms-python.vscode-pylance"
       ]
     }
   },
-  "updateContentCommand": "[ -f packages.txt ] && sudo apt update && sudo apt upgrade -y && sudo xargs apt install -y <packages.txt; [ -f requirements.txt ] && pip3 install --user -r requirements.txt; pip3 install --user streamlit; echo '✅ Packages installed and Requirements met'",
+  "updateContentCommand": "[ -f packages.txt ] && sudo apt update && sudo apt upgrade -y && sudo xargs apt install -y <packages.txt; [ -f requirements.txt ] && pip3 install --user -r requirements.txt; [ -f api/requirements.txt ] && python3 -m venv api/.venv && api/.venv/bin/pip install --upgrade pip && api/.venv/bin/pip install -r api/requirements-dev.txt; [ -f web/package.json ] && (cd web && npm install); echo 'Packages installed and Requirements met'",
   "postAttachCommand": {
     "server": "streamlit run src/\"Alignment Visualizer.py\" --server.enableCORS false --server.enableXsrfProtection false"
   },
   "portsAttributes": {
     "8501": {
-      "label": "Application",
+      "label": "Streamlit (legacy app)",
       "onAutoForward": "openPreview"
+    },
+    "8000": {
+      "label": "API (FastAPI)",
+      "onAutoForward": "silent"
+    },
+    "5173": {
+      "label": "Web (Vite dev server)",
+      "onAutoForward": "silent"
     }
   },
   "forwardPorts": [
-    8501
+    8501,
+    8000,
+    5173
   ]
 }
