@@ -1,9 +1,4 @@
 streamlit
 pandas
 numpy
-uuid
 htbuilder
-sys
-time
-enum
-io

@@ -1,19 +1,25 @@
-# 🎈 Blank app template
+# Alignment Visualizer
 
-A simple Streamlit app template for you to modify!
+A Streamlit app for visualizing sequence alignment algorithms.
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
+## Run in a dev container
 
-### How to run it on your own machine
+1. Open the repository in VS Code.
+2. Install the Dev Containers extension if it is not already available.
+3. Run “Dev Containers: Reopen in Container” from the Command Palette.
+4. The container will install the Python dependencies from [requirements.txt](requirements.txt) and start the app automatically.
+5. Open the forwarded port 8501 to view the app.
 
-1. Install the requirements
+## Run locally
 
+1. Install the requirements:
+
+   ```bash
+   pip install -r requirements.txt
    ```
-   $ pip install -r requirements.txt
-   ```
 
-2. Run the app
+2. Start the app:
 
-   ```
-   $ streamlit run src/"Alignment Visualizer.py"
+   ```bash
+   streamlit run "src/Alignment Visualizer.py"
    ```
