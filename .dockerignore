@@ -1,0 +1,10 @@
+**/__pycache__/
+**/*.pyc
+api/.venv/
+web/node_modules/
+web/dist/
+src/
+.git/
+.devcontainer/
+.pytest_cache/
+*.mp4
