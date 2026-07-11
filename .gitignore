@@ -5,6 +5,9 @@
 __pycache__/
 *.py[cod]
 
+# Python packaging/build artifacts
+*.egg-info/
+
 # Python virtual environments
 .env
 .venv
