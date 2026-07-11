@@ -1,27 +1,29 @@
+class InvalidSequenceEncodingError(ValueError):
+    def __init__(self, offending_index: int, offending_char: str, valid_characters: set):
+        self.offending_index = offending_index
+        self.offending_char = offending_char
+        self.valid_characters = valid_characters
+        super().__init__(
+            f"Sequence {offending_index + 1} contains {offending_char!r}, "
+            f"which is not a valid character ({', '.join(sorted(valid_characters))})."
+        )
+
+
 class Sequence:
 
     def __init__(self, valid_characters: set):
         self.valid_characters = valid_characters
-        self.validated_sequences = list()
 
-    def get_validated_sequences(self) -> list[str]:
-        return self.validated_sequences
+    def validate_encoding(self, sequences: list[str]) -> list[str]:
+        validated = []
 
-    def validate_encoding(self, sequences: list[str]) -> None:
-
-        if sequences is None:
-            return
-
-        for i, sequence in enumerate(sequences):
-
+        for index, sequence in enumerate(sequences):
             upper_sequence = sequence.upper()
 
-            sequences[i] = upper_sequence
-
             for character in upper_sequence:
-
                 if character not in self.valid_characters:
-                    self.validated_sequences = list()
-                    return
+                    raise InvalidSequenceEncodingError(index, character, self.valid_characters)
 
-            self.validated_sequences.append(upper_sequence)
+            validated.append(upper_sequence)
+
+        return validated
