@@ -12,9 +12,9 @@ from .ribosum_rna_scoring_matrix import RibosumRNAScoringMatrix
 
 class ScoringMatrixFactory:
     @staticmethod
-    def create_scoring_matrix(using_scoring_matrix_option, sequence_type_option, preset_option=None):
+    def create_scoring_matrix(use_custom_matrix: bool, sequence_type_option, preset_option=None):
 
-        if using_scoring_matrix_option == "No":
+        if not use_custom_matrix:
             match sequence_type_option:
                 case "DNA":
                     match preset_option:
